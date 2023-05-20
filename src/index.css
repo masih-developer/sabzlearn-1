@@ -1,3 +1,30 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+    html,
+    body {
+        direction: rtl;
+        @apply font-IRANSans;
+    }
+
+    body {
+        @apply relative;
+    }
+
+    .moodal-wrapper {
+        @apply invisible fixed bottom-0 left-0 right-0
+        top-0 bg-[rgba(0,0,0,.5)] opacity-0 duration-300;
+    }
+
+    .moodal-wrapper--active {
+        @apply visible z-20 opacity-100;
+    }
+}
+
+@layer components {
+    .app-btn {
+        @apply flex items-center justify-center gap-1 rounded-md bg-primary-color p-2 text-center text-xs text-white sm:p-3 sm:text-md;
+    }
+}
