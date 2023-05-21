@@ -13,23 +13,6 @@ const App = () => {
                 <Header />
                 <main>{router}</main>
                 <Footer />
-                <br />
-                <br />
-                <br />
-                <br />
-                <br />
-                <br />
-                <br />
-                <br />
-                <br />
-                <br />
-                <br />
-                <br />
-                <br />
-                <br />
-                <br />
-                <br />
-                <br />
             </SidebarProvider>
         </>
     );

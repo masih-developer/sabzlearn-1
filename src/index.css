@@ -27,4 +27,7 @@
     .app-btn {
         @apply flex items-center justify-center gap-1 rounded-md bg-primary-color p-2 text-center text-xs text-white sm:p-3 sm:text-md;
     }
+    .footer-title {
+        @apply relative block font-IRANSans-Medium text-lg before:absolute before:bottom-0 before:right-2 before:top-0 before:m-auto before:h-9 before:w-9 before:rotate-45 before:rounded-lg before:bg-primary-color before:opacity-30 before:content-[""];
+    }
 }
