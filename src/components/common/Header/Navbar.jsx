@@ -8,7 +8,7 @@ const Navbar = () => {
     const { isOpenSidebar, setIsOpenSidebar } = useContext(SidebarContext);
 
     return (
-        <nav className="fixed z-10 flex w-full items-center justify-between bg-white p-3 shadow-xl lg:static lg:p-5">
+        <nav className="fixed left-0 right-0 top-0 z-10 flex w-full items-center justify-between bg-white p-3 shadow-xl lg:static lg:p-5 lg:shadow-sm">
             <button
                 className="flex items-center justify-center rounded-md bg-primary-color p-2.5 text-white lg:hidden"
                 onClick={() => setIsOpenSidebar((prev) => !prev)}
@@ -17,7 +17,7 @@ const Navbar = () => {
             </button>
             <div className="flex items-center justify-center gap-3">
                 <img
-                    src="./images/logo/Logo.png"
+                    src="/images/logo/Logo.png"
                     alt="sabzlearn-logo"
                     className="block w-[70px] lg:w-[100px]"
                 />
@@ -32,7 +32,7 @@ const Navbar = () => {
                             فرانت اند
                             <FaAngleDown className="duration-300 group-hover/icon:rotate-180" />
                         </Link>
-                        <ul className="invisible absolute right-0 top-14 w-60 rounded-lg border-b-2 border-solid border-b-primary-color bg-white p-5 opacity-0 shadow-lg duration-300 group-hover/megamenu:visible group-hover/megamenu:top-12 group-hover/megamenu:opacity-100">
+                        <ul className="invisible absolute right-0 top-14 z-10 w-60 rounded-lg border-b-2 border-solid border-b-primary-color bg-white p-5 opacity-0 shadow-lg duration-300 group-hover/megamenu:visible group-hover/megamenu:top-12 group-hover/megamenu:opacity-100">
                             <li className="w-100 block">
                                 <Link className="block py-2 text-md text-dark-color duration-300 hover:text-blue-hover">
                                     آموزش Html
@@ -65,7 +65,7 @@ const Navbar = () => {
                             امنیت
                             <FaAngleDown className="duration-300 group-hover/icon:rotate-180" />
                         </Link>
-                        <ul className="invisible absolute right-0 top-14 w-60 rounded-lg border-b-2 border-solid border-b-primary-color bg-white p-5 opacity-0 shadow-lg duration-300 group-hover/megamenu:visible group-hover/megamenu:top-12 group-hover/megamenu:opacity-100">
+                        <ul className="invisible absolute right-0 top-14 z-10 w-60 rounded-lg border-b-2 border-solid border-b-primary-color bg-white p-5 opacity-0 shadow-lg duration-300 group-hover/megamenu:visible group-hover/megamenu:top-12 group-hover/megamenu:opacity-100">
                             <li className="w-100 block">
                                 <Link className="block py-2 text-md text-dark-color duration-300 hover:text-blue-hover">
                                     آموزش کالی لینوکس
@@ -93,7 +93,7 @@ const Navbar = () => {
                             مقالات
                             <FaAngleDown className="duration-300 group-hover/icon:rotate-180" />
                         </Link>
-                        <ul className="invisible absolute right-0 top-14 w-60 rounded-lg border-b-2 border-solid border-b-primary-color bg-white p-5 opacity-0 shadow-lg duration-300 group-hover/megamenu:visible group-hover/megamenu:top-12 group-hover/megamenu:opacity-100">
+                        <ul className="invisible absolute right-0 top-14 z-10 w-60 rounded-lg border-b-2 border-solid border-b-primary-color bg-white p-5 opacity-0 shadow-lg duration-300 group-hover/megamenu:visible group-hover/megamenu:top-12 group-hover/megamenu:opacity-100">
                             <li className="w-100 block">
                                 <Link className="block py-2 text-md text-dark-color duration-300 hover:text-blue-hover">
                                     توسعه وب
@@ -116,7 +116,7 @@ const Navbar = () => {
                             پایتون
                             <FaAngleDown className="duration-300 group-hover/icon:rotate-180" />
                         </Link>
-                        <ul className="invisible absolute right-0 top-14 w-60 rounded-lg border-b-2 border-solid border-b-primary-color bg-white p-5 opacity-0 shadow-lg duration-300 group-hover/megamenu:visible group-hover/megamenu:top-12 group-hover/megamenu:opacity-100">
+                        <ul className="invisible absolute right-0 top-14 z-10 w-60 rounded-lg border-b-2 border-solid border-b-primary-color bg-white p-5 opacity-0 shadow-lg duration-300 group-hover/megamenu:visible group-hover/megamenu:top-12 group-hover/megamenu:opacity-100">
                             <li className="w-100 block">
                                 <Link className="block py-2 text-md text-dark-color duration-300 hover:text-blue-hover">
                                     دوره متخصص پایتون
