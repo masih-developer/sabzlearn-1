@@ -4,7 +4,7 @@ import LndingCounter from "./LndingCounter";
 
 const Landing = () => {
     return (
-        <section className="bg-[linear-gradient(to_right_bottom,rgba(0,0,0,.6),rgba(0,0,0,.6)),url('./images/background_landing.jfif')] bg-cover bg-center px-3 py-24 text-center text-white">
+        <section className="bg-[linear-gradient(to_right_bottom,rgba(0,0,0,.6),rgba(0,0,0,.6)),url('/images/background_landing.jfif')] bg-cover bg-center px-3 py-24 text-center text-white">
             <h1 className="font-IRANSans-Medium text-4xl font-medium">
                 <TypeWritterComponent
                     options={{ loop: "true" }}
