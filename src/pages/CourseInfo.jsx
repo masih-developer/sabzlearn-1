@@ -185,11 +185,11 @@ const CourseInfo = () => {
                                 جدیدی به دنیای جاوا اسکریپت و وب اضافه شد، به راحتی بتوانید آن را
                                 یاد بگیرید.
                             </p>
-                            <div className="mb-7 flex items-center gap-2">
-                                <button className="flex items-center justify-center rounded-md border-2 border-primary-color p-2 text-center font-IRANSans-Medium text-primary-color duration-300 hover:bg-primary-color hover:text-white">
+                            <div className="mb-7 flex flex-col items-center gap-2 sm:flex-row">
+                                <button className="flex w-full items-center justify-center rounded-md border-2 border-primary-color p-3 text-center font-IRANSans-Medium text-md text-primary-color duration-300 hover:bg-primary-color hover:text-white md:w-auto">
                                     دانلود همگانی ویدیو ها
                                 </button>
-                                <button className="flex items-center justify-center rounded-md border-2 border-primary-color p-2 text-center font-IRANSans-Medium text-primary-color duration-300 hover:bg-primary-color hover:text-white">
+                                <button className="flex w-full items-center justify-center rounded-md border-2 border-primary-color p-3 text-center font-IRANSans-Medium text-md text-primary-color duration-300 hover:bg-primary-color hover:text-white md:w-auto">
                                     دانلود همگانی پیوست ها
                                 </button>
                             </div>
@@ -356,8 +356,8 @@ const CourseInfo = () => {
                         </div>
                         <div className="mt-7 rounded-lg p-5 shadow-[0_0_13px_1px_rgba(70,72,77,0.08)]">
                             <div className="flex items-center justify-between">
-                                <div className="flex items-center gap-5">
-                                    <div className="w-h-16 h-16 overflow-hidden rounded-full">
+                                <div className="flex items-center gap-2 sm:gap-3">
+                                    <div className="w-h-12 h-12 overflow-hidden rounded-full sm:h-16 sm:w-16">
                                         <img
                                             src="/images/info/teacher.jfif"
                                             alt=""
@@ -373,8 +373,8 @@ const CourseInfo = () => {
                                         </span>
                                     </div>
                                 </div>
-                                <div className="flex items-center gap-2 rounded-md bg-primary-color p-2 text-white">
-                                    <FaChalkboardTeacher className="text-2xl" />
+                                <div className="flex items-center gap-2 rounded-md bg-primary-color p-1.5 text-white sm:p-2">
+                                    <FaChalkboardTeacher className="text-xl sm:text-2xl" />
                                     <span className="font-IRANSans-Medium">مدرس</span>
                                 </div>
                             </div>
