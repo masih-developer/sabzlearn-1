@@ -19,7 +19,7 @@
     }
 
     .moodal-wrapper--active {
-        @apply visible z-20 opacity-100;
+        @apply visible z-[2000] opacity-100;
     }
 }
 

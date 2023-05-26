@@ -8,7 +8,7 @@ const Navbar = () => {
     const { isOpenSidebar, setIsOpenSidebar } = useContext(SidebarContext);
 
     return (
-        <nav className="fixed left-0 right-0 top-0 z-10 flex w-full items-center justify-between bg-white p-3 shadow-xl lg:static lg:p-5 lg:shadow-sm">
+        <nav className="fixed left-0 right-0 top-0 z-[100] flex w-full items-center justify-between bg-white p-3 shadow-xl lg:static lg:p-5 lg:shadow-sm">
             <button
                 className="flex items-center justify-center rounded-md bg-primary-color p-2.5 text-white lg:hidden"
                 onClick={() => setIsOpenSidebar((prev) => !prev)}
