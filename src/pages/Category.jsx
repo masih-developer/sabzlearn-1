@@ -75,33 +75,38 @@ const Category = () => {
                     </div>
                 </div>
                 <div className="grid grid-cols-1 gap-x-4 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
-                    <div className="duration-300 hover:-translate-y-2">
-                        <CourseBox
-                            img="/images/courses/fareelancer.png"
-                            title="دوره پروژه های فریلنسری"
-                            teacher="رضا دولتی"
-                            studentCount="1000"
-                            price={2_000_000}
-                        />
-                    </div>
-                    <div className="duration-300 hover:-translate-y-2">
-                        <CourseBox
-                            img="/images/courses/jango.png"
-                            title="دوره پروژه های فریلنسری"
-                            teacher="رضا دولتی"
-                            studentCount="1000"
-                            price={2_000_000}
-                        />
-                    </div>
-                    <div className="duration-300 hover:-translate-y-2">
-                        <CourseBox
-                            img="/images/courses/js_project.png"
-                            title="دوره پروژه های فریلنسری"
-                            teacher="رضا دولتی"
-                            studentCount="1000"
-                            price={2_000_000}
-                        />
-                    </div>
+                    <CourseBox
+                        hoverEffect
+                        img="/images/courses/fareelancer.png"
+                        title="دوره پروژه های فریلنسری"
+                        teacher="رضا دولتی"
+                        studentCount="1000"
+                        price={2_000_000}
+                    />
+                    <CourseBox
+                        hoverEffect
+                        img="/images/courses/jango.png"
+                        title="دوره پروژه های فریلنسری"
+                        teacher="رضا دولتی"
+                        studentCount="1000"
+                        price={2_000_000}
+                    />
+                    <CourseBox
+                        hoverEffect
+                        img="/images/courses/js_project.png"
+                        title="دوره پروژه های فریلنسری"
+                        teacher="رضا دولتی"
+                        studentCount="1000"
+                        price={2_000_000}
+                    />
+                    <CourseBox
+                        hoverEffect
+                        img="/images/courses/js_project.png"
+                        title="دوره پروژه های فریلنسری"
+                        teacher="رضا دولتی"
+                        studentCount="1000"
+                        price={2_000_000}
+                    />
                 </div>
                 <div className="mt-10 flex w-full items-center justify-center gap-2">
                     <button className="flex h-10 w-10 items-center justify-center rounded-md bg-[#f0f0f1] text-dark-color duration-300 hover:bg-primary-color hover:text-white">
