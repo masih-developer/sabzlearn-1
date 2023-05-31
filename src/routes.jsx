@@ -4,6 +4,8 @@ import Category from "./pages/Category";
 import CourseInfo from "./pages/CourseInfo";
 import NotFound from "./pages/NotFound";
 import Courses from "./pages/Courses";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
 
 const routes = [
     { path: "/", element: <Home /> },
@@ -11,6 +13,8 @@ const routes = [
     { path: "/article-info/:articleName", element: <ArticleInfo /> },
     { path: "/category-info/:categoryName", element: <Category /> },
     { path: "/course-info/:courseName", element: <CourseInfo /> },
+    { path: "/login", element: <Login /> },
+    { path: "/register", element: <Register /> },
     { path: "*", element: <NotFound /> },
 ];
 
