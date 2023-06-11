@@ -1,15 +1,27 @@
+import { useState } from "react";
 import { FaArrowLeft, FaChalkboardTeacher, FaRegStar, FaStar, FaUserFriends } from "react-icons/fa";
 
 const CourseBox = ({ img, title, teacher, studentCount, price, hoverEffect }) => {
+    const [isShowImg, setIsShowImg] = useState(false);
     return (
         <div
             className={`flex select-none flex-col overflow-hidden rounded-lg bg-white shadow-[0_0_19px_rgba(168,172,185,0.3)] ${
                 hoverEffect ? "duration-300 hover:-translate-y-2" : ""
             }`}
         >
-            <a href="" className="block w-full">
-                <img src={img} alt="" className="w-full" />
+            <a href="" className={`block w-full`}>
+                <img
+                    src={img}
+                    alt=""
+                    className={`max-h-[210px] w-full object-cover`}
+                    onLoad={() => setIsShowImg(true)}
+                />
             </a>
+            {!isShowImg && (
+                <div className="flex h-[210px] w-full items-center justify-center bg-white">
+                    <div className="h-10 w-10 animate-spin rounded-full border-4 border-green-100 border-t-primary-color"></div>
+                </div>
+            )}
             <div className="px-2 py-3">
                 <a href="#">
                     <h4 className="text-dark-color duration-300 hover:text-blue-hover">{title}</h4>
