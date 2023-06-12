@@ -13,6 +13,10 @@
         @apply relative;
     }
 
+    body div:last-of-type {
+        left: unset !important;
+    }
+
     .moodal-wrapper {
         @apply invisible fixed bottom-0 left-0 right-0
         top-0 bg-[rgba(0,0,0,.5)] opacity-0 duration-300;
