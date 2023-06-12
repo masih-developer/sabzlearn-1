@@ -1,35 +1,42 @@
 import { Link } from "react-router-dom";
 import { FaEnvelope, FaPhoneAlt } from "react-icons/fa";
+import { useEffect, useState } from "react";
 
-const items = [
-    { id: 1, title: "آموزش Html", path: "/" },
-    { id: 2, title: "آموزش Css", path: "/" },
-    { id: 3, title: "آموزش Js", path: "/" },
-    { id: 4, title: "آموزش Bootstrap", path: "/" },
-    { id: 5, title: "آموزش Python", path: "/" },
-    { id: 6, title: "آموزش React js", path: "/" },
-    { id: 7, title: "20,000 تومان", path: "/" },
-];
 const TopBar = () => {
+    const [allLinks, setAllLinks] = useState([]);
+
+    useEffect(() => {
+        fetch("http://localhost:4000/v1/menus/topbar")
+            .then((res) => res.json())
+            .then((result) => {
+                setAllLinks(result);
+            });
+    }, []);
+
+    const getRandomItemsFromArray = (arr, randomCount) => {
+        const shuffled = [...arr].sort(() => 0.5 - Math.random());
+        return shuffled.slice(0, randomCount);
+    };
+
     return (
-        <div className="hidden lg:flex flex-wrap items-center justify-between bg-grey-color p-5">
+        <div className="hidden flex-wrap items-center justify-between gap-3 bg-grey-color p-5 lg:flex">
             <ul className="flex items-center justify-center gap-4 xl:gap-5">
-                {items.map((item) => (
-                    <li key={item.id}>
+                {getRandomItemsFromArray(allLinks, 5).map((item) => (
+                    <li key={item._id}>
                         <Link
-                            to={item.path}
-                            className="text-md text-dark-color hover:text-blue-hover transition-colors"
+                            to={item.href}
+                            className="text-md text-dark-color transition-colors hover:text-blue-hover"
                         >
                             {item.title}
                         </Link>
                     </li>
                 ))}
             </ul>
-            <div className="flex items-center-justify-center gap-5 mr-auto lg:mr-0">
+            <div className="items-center-justify-center mr-auto flex gap-5">
                 <div className="flex items-center justify-center gap-1">
                     <Link
                         to="/"
-                        className="text-md text-dark-color hover:text-blue-hover transition-colors"
+                        className="text-md text-dark-color transition-colors hover:text-blue-hover"
                     >
                         sabzlearn@gmail.com
                     </Link>
@@ -38,7 +45,7 @@ const TopBar = () => {
                 <div className="flex items-center justify-center gap-1">
                     <Link
                         to="/"
-                        className="text-md text-dark-color hover:text-blue-hover transition-colors"
+                        className="text-md text-dark-color transition-colors hover:text-blue-hover"
                     >
                         09921558293
                     </Link>
