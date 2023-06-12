@@ -127,7 +127,7 @@ const Login = () => {
                             />
                             <FaLockOpen className="absolute bottom-0 left-2 top-0 m-auto shrink-0 text-xl text-[#8d8d8d]" />
                         </div>
-                        <div className="">
+                        <div className="mx-auto max-w-full">
                             <ReCAPTCHA
                                 sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"
                                 onChange={onChangeHandler}
