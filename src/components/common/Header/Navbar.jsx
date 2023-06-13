@@ -37,7 +37,10 @@ const Navbar = () => {
                 </Button>
                 <ul className="hidden flex-wrap items-center justify-start gap-x-4 lg:flex">
                     <li className="group/icon relative">
-                        <Link className="flex items-center justify-center gap-1 text-[#7f8187] transition-colors hover:text-dark-color">
+                        <Link
+                            to="/"
+                            className="flex items-center justify-center gap-1 text-[#7f8187] transition-colors hover:text-dark-color"
+                        >
                             صفحه اصلی
                         </Link>
                     </li>
