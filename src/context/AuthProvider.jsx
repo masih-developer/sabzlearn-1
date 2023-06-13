@@ -10,7 +10,7 @@ export const AuthContext = createContext({
 
 const AuthProvider = ({ children }) => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const [token, setToken] = useState(false);
+    const [token, setToken] = useState("");
     const [userInfos, setUserInfos] = useState({});
 
     const login = useCallback((token) => {
@@ -26,7 +26,7 @@ const AuthProvider = ({ children }) => {
         localStorage.removeItem("user");
     }, []);
 
-    useEffect(() => {
+    const checkLocalStorageUser = () => {
         const localStorageUserData = JSON.parse(localStorage.getItem("user"));
         if (localStorageUserData) {
             fetch("http://localhost:4000/v1/auth/me", {
@@ -40,7 +40,11 @@ const AuthProvider = ({ children }) => {
                     setUserInfos(data);
                 });
         }
-    }, [login, token]);
+    };
+
+    useEffect(() => {
+        checkLocalStorageUser();
+    }, [token]);
 
     return (
         <AuthContext.Provider value={{ isLoggedIn, token, userInfos, login, logout }}>
