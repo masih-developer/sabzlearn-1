@@ -13,7 +13,7 @@
         @apply relative;
     }
 
-    body div:last-of-type {
+    body > div:last-child {
         left: unset !important;
     }
 
