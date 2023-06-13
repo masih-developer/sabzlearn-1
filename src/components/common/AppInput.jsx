@@ -36,7 +36,7 @@ const AppInput = (props) => {
                 type={type}
                 placeholder={placeholder}
                 className={`${className} ${
-                    mainInput.isValid ? "border-green-500" : "border border-red-500"
+                    mainInput.isValid ? "border border-green-500" : "border border-red-500"
                 }`}
                 id={id}
                 name={name}
@@ -50,6 +50,7 @@ const AppInput = (props) => {
                 className={`${className} ${
                     mainInput.isValid ? "border border-green-500" : "border border-red-500"
                 }`}
+                placeholder={placeholder}
                 onChange={changeInputHandler}
                 value={mainInput.value}
             ></textarea>
