@@ -15,14 +15,118 @@ import {
     FaYoutube,
     FaChalkboardTeacher,
     FaLink,
+    FaArrowRight,
+    FaArrowLeft,
+    FaCheck,
 } from "react-icons/fa";
+import { BiMessage } from "react-icons/bi";
 import Breadcrumb from "../components/common/Breadcrumb";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import SectionTitle from "../components/common/SectionTitle";
 import Accordion from "../components/common/Accordion/Accordion";
 import AccordionItem from "../components/common/Accordion/AccordionItem";
+import { useContext, useEffect, useState } from "react";
+import Button from "../components/common/Button";
+import SelectMenu from "../components/common/SelectMenu";
+import AppInput from "../components/common/AppInput";
+import useForm from "../hooks/useForm";
+import { requiredValidator } from "../validators/rules";
+import { toast } from "react-hot-toast";
+import { AuthContext } from "../context/AuthProvider";
 
 const CourseInfo = () => {
+    const { courseName } = useParams();
+    const authContext = useContext(AuthContext);
+    const [courseDetails, setCourseDetails] = useState({});
+    const [comments, setComments] = useState([]);
+    const [sessions, setSessions] = useState([]);
+    const [createdAt, setCreatedAt] = useState("");
+    const [updatedAt, setUpdatedAt] = useState("");
+    const [courseTeacher, setCourseTeacher] = useState({});
+    const [isValidSelectMenu, setIsValidSelectMenu] = useState(false);
+    const [selectMenuActiveIem, setSelectMenuActiveIem] = useState("رای دهید");
+    const [formState, onInputHandler] = useForm(
+        {
+            textarea: {
+                value: "",
+                isValid: false,
+            },
+        },
+        false
+    );
+
+    useEffect(() => {
+        if (localStorage.getItem("user")) {
+            fetch(`http://localhost:4000/v1/courses/${courseName}`, {
+                headers: {
+                    Authorization: `Bearer ${JSON.parse(localStorage.getItem("user")).token}`,
+                },
+            })
+                .then((res) => res.json())
+                .then((result) => {
+                    setCourseDetails(result);
+                    setComments(result.comments);
+                    setSessions(result.sessions);
+                    setCreatedAt(result.createdAt);
+                    setUpdatedAt(result.updatedAt);
+                    setCourseTeacher(result.creator);
+                });
+        }
+    }, [courseName]);
+
+    const calculateScore = (value) => {
+        switch (value) {
+            case "عالی":
+                return 5;
+            case "خوب":
+                return 4;
+            case "متوسط":
+                return 3;
+            case "نه خیلی بد":
+                return 2;
+            case "خیلی بد":
+                return 1;
+            default:
+                return 5000;
+        }
+    };
+
+    const selectMenuChangeHandler = (selectMenuInfo) => {
+        setSelectMenuActiveIem(selectMenuInfo);
+        setIsValidSelectMenu(selectMenuInfo.isValid);
+    };
+
+    const sendCommentHandler = () => {
+        const newCommnet = {
+            body: formState.inputs.textarea.value,
+            courseShortName: courseName,
+            score: calculateScore(selectMenuActiveIem.item),
+        };
+
+        const sendCommentF = async () => {
+            try {
+                const res = await fetch("http://localhost:4000/v1/comments", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${JSON.parse(localStorage.getItem("user")).token}`,
+                    },
+                    body: JSON.stringify(newCommnet),
+                });
+                const result = await res.json();
+                return result;
+            } catch (err) {
+                throw new Error(err); // Throw the error to be caught by the promise
+            }
+        };
+
+        toast.promise(sendCommentF(), {
+            loading: "درحال ارسال کامنت...",
+            success: "ارسال کامنت با موفقیت انجام شد.",
+            error: "ارسال کامنت با خطا مواجه شد.",
+        });
+    };
+
     return (
         <div className="mt-20 lg:mt-0">
             <div className="container">
@@ -40,18 +144,12 @@ const CourseInfo = () => {
                 <section className="my-5 grid grid-cols-1 gap-10 rounded-lg p-2 shadow-[0_0_13px_1px_rgba(70,72,77,0.08)] sm:p-5 lg:grid-cols-2 lg:gap-5">
                     <div>
                         <button className="romd flex items-center justify-center rounded-md bg-[#d5f5dd] p-2 text-xs text-primary-color duration-300 hover:text-blue-hover">
-                            آموزش برنامه نویسی فرانت اند
+                            {courseDetails.name}
                         </button>
                         <h2 className="mt-5 font-IRANSans-Medium text-2xl text-[#464749]">
-                            آموزش 20 کتابخانه جاوااسکریپت برای بازار کار
+                            {courseDetails.name}
                         </h2>
-                        <p className="mb-7 mt-6 text-[#7b868a]">
-                            امروزه کتابخانه‌ها کد نویسی را خیلی آسان و لذت بخش تر کرده اند. به قدری
-                            که حتی امروزه هیچ شرکت برنامه نویسی پروژه های خود را با Vanilla Js پیاده
-                            سازی نمی کند و همیشه از کتابخانه ها و فریمورک های موجود استفاده می کند.
-                            پس شما هم اگه میخواید یک برنامه نویس عالی فرانت اند باشید، باید کتابخانه
-                            های کاربردی که در بازار کار استفاده می شوند را به خوبی بلد باشید
-                        </p>
+                        <p className="mb-7 mt-6 text-[#7b868a]">{courseDetails.description}</p>
                         <div className="flex items-center gap-5">
                             <Link className="text-[#b1bbbf] duration-300 hover:text-blue-hover">
                                 <FaTelegram className="text-xl" />
@@ -67,7 +165,7 @@ const CourseInfo = () => {
                     <div>
                         <video
                             src=""
-                            poster="/images/courses/js_project.png"
+                            poster={`http://localhost:4000/courses/covers/${courseDetails.cover}`}
                             className="w-full rounded-lg"
                             controls
                         ></video>
@@ -80,16 +178,20 @@ const CourseInfo = () => {
                                 <FaGraduationCap className="text-4xl text-primary-color" />
                                 <div className="flex flex-col">
                                     <span className="mb-1 block text-[#858c96]">وضعیت دوره:</span>
-                                    <span className="block text-[#7d7e7f]">به اتمام رسیده</span>
+                                    <span className="block text-[#7d7e7f]">
+                                        {courseDetails.isComplete === 1
+                                            ? "به اتمام رسیده"
+                                            : "درحال ظبط"}
+                                    </span>
                                 </div>
                             </div>
                             <div className="flex items-center gap-4 rounded-lg p-5 shadow-[0_5px_30px_rgba(70,72,77,0.08)]">
                                 <FaClock className="text-4xl text-primary-color" />
                                 <div className="flex flex-col">
-                                    <span className="mb-1 block text-[#858c96]">
-                                        مدت زمان دوره:
+                                    <span className="mb-1 block text-[#858c96]">زمان برگزاری:</span>
+                                    <span className="block text-[#7d7e7f]">
+                                        {createdAt.slice(0, 10)}
                                     </span>
-                                    <span className="block text-[#7d7e7f]">19 ساعت</span>
                                 </div>
                             </div>
                             <div className="flex items-center gap-4 rounded-lg p-5 shadow-[0_5px_30px_rgba(70,72,77,0.08)]">
@@ -98,14 +200,18 @@ const CourseInfo = () => {
                                     <span className="mb-1 block text-[#858c96]">
                                         آخرین بروزرسانی:
                                     </span>
-                                    <span className="block text-[#7d7e7f]">1401/03/02</span>
+                                    <span className="block text-[#7d7e7f]">
+                                        {updatedAt.slice(0, 10)}
+                                    </span>
                                 </div>
                             </div>
                             <div className="flex items-center gap-4 rounded-lg p-5 shadow-[0_5px_30px_rgba(70,72,77,0.08)]">
                                 <FaUser className="text-4xl text-primary-color" />
                                 <div className="flex flex-col">
                                     <span className="mb-1 block text-[#858c96]">روش پشتیبانی:</span>
-                                    <span className="block text-[#7d7e7f]">آنلاین</span>
+                                    <span className="block text-[#7d7e7f]">
+                                        {courseDetails.support}
+                                    </span>
                                 </div>
                             </div>
                             <div className="flex items-center gap-4 rounded-lg p-5 shadow-[0_5px_30px_rgba(70,72,77,0.08)]">
@@ -195,160 +301,30 @@ const CourseInfo = () => {
                             </div>
                             <div className="flex w-full flex-col gap-5">
                                 <Accordion className="flex w-full flex-col gap-4">
-                                    <AccordionItem title="معرفی دوره">
+                                    <AccordionItem title="جلسات دوره">
                                         <div className="flex flex-col">
-                                            <div className="flex items-center justify-between border-b border-b-[#dee2e6] p-3 last:border-none">
-                                                <div className="flex items-center gap-3">
-                                                    <span className="flex h-9 w-9 items-center justify-center rounded-full border border-[#bfbfbf] text-[#656464]">
-                                                        1
-                                                    </span>
-                                                    <FaYoutube className="text-xl text-[#939aa3]" />
-                                                    <Link
-                                                        to="/"
-                                                        className="text-[#161616] duration-300 hover:text-blue-hover"
-                                                    >
-                                                        معرفی دوره + چرا یادگیری کتابخانه ها ضروری
-                                                        است؟
-                                                    </Link>
+                                            {sessions.map((item, index) => (
+                                                <div
+                                                    key={item._id}
+                                                    className="flex items-center justify-between border-b border-b-[#dee2e6] p-3 last:border-none"
+                                                >
+                                                    <div className="flex items-center gap-3">
+                                                        <span className="flex h-9 w-9 items-center justify-center rounded-full border border-[#bfbfbf] text-[#656464]">
+                                                            {index + 1}
+                                                        </span>
+                                                        <FaYoutube className="text-xl text-[#939aa3]" />
+                                                        <Link
+                                                            to="/"
+                                                            className="text-[#161616] duration-300 hover:text-blue-hover"
+                                                        >
+                                                            {item.title}
+                                                        </Link>
+                                                    </div>
+                                                    <div className="text-[#7a7a7a]">
+                                                        {item.time}
+                                                    </div>
                                                 </div>
-                                                <div className="text-[#7a7a7a]">18:34</div>
-                                            </div>
-                                            <div className="flex items-center justify-between border-b border-b-[#dee2e6] p-3 last:border-none ">
-                                                <div className="flex items-center gap-3">
-                                                    <span className="flex h-9 w-9 items-center justify-center rounded-full border border-[#bfbfbf] text-[#656464]">
-                                                        1
-                                                    </span>
-                                                    <FaYoutube className="text-xl text-[#939aa3]" />
-                                                    <Link
-                                                        to="/"
-                                                        className="text-[#161616] duration-300 hover:text-blue-hover"
-                                                    >
-                                                        معرفی دوره + چرا یادگیری کتابخانه ها ضروری
-                                                        است؟
-                                                    </Link>
-                                                </div>
-                                                <div className="text-[#7a7a7a]">18:34</div>
-                                            </div>
-                                            <div className="flex items-center justify-between border-b border-b-[#dee2e6] p-3 last:border-none ">
-                                                <div className="flex items-center gap-3">
-                                                    <span className="flex h-9 w-9 items-center justify-center rounded-full border border-[#bfbfbf] text-[#656464]">
-                                                        1
-                                                    </span>
-                                                    <FaYoutube className="text-xl text-[#939aa3]" />
-                                                    <Link
-                                                        to="/"
-                                                        className="text-[#161616] duration-300 hover:text-blue-hover"
-                                                    >
-                                                        معرفی دوره + چرا یادگیری کتابخانه ها ضروری
-                                                        است؟
-                                                    </Link>
-                                                </div>
-                                                <div className="text-[#7a7a7a]">18:34</div>
-                                            </div>
-                                        </div>
-                                    </AccordionItem>
-                                    <AccordionItem title="hello">
-                                        <div className="flex flex-col">
-                                            <div className="flex items-center justify-between border-b border-b-[#dee2e6] p-3 last:border-none ">
-                                                <div className="flex items-center gap-3">
-                                                    <span className="flex h-9 w-9 items-center justify-center rounded-full border border-[#bfbfbf] text-[#656464]">
-                                                        1
-                                                    </span>
-                                                    <FaYoutube className="text-xl text-[#939aa3]" />
-                                                    <Link
-                                                        to="/"
-                                                        className="text-[#161616] duration-300 hover:text-blue-hover"
-                                                    >
-                                                        معرفی دوره + چرا یادگیری کتابخانه ها ضروری
-                                                        است؟
-                                                    </Link>
-                                                </div>
-                                                <div className="text-[#7a7a7a]">18:34</div>
-                                            </div>
-                                            <div className="flex items-center justify-between border-b border-b-[#dee2e6] p-3 last:border-none ">
-                                                <div className="flex items-center gap-3">
-                                                    <span className="flex h-9 w-9 items-center justify-center rounded-full border border-[#bfbfbf] text-[#656464]">
-                                                        1
-                                                    </span>
-                                                    <FaYoutube className="text-xl text-[#939aa3]" />
-                                                    <Link
-                                                        to="/"
-                                                        className="text-[#161616] duration-300 hover:text-blue-hover"
-                                                    >
-                                                        معرفی دوره + چرا یادگیری کتابخانه ها ضروری
-                                                        است؟
-                                                    </Link>
-                                                </div>
-                                                <div className="text-[#7a7a7a]">18:34</div>
-                                            </div>
-                                            <div className="flex items-center justify-between border-b border-b-[#dee2e6] p-3 last:border-none ">
-                                                <div className="flex items-center gap-3">
-                                                    <span className="flex h-9 w-9 items-center justify-center rounded-full border border-[#bfbfbf] text-[#656464]">
-                                                        1
-                                                    </span>
-                                                    <FaYoutube className="text-xl text-[#939aa3]" />
-                                                    <Link
-                                                        to="/"
-                                                        className="text-[#161616] duration-300 hover:text-blue-hover"
-                                                    >
-                                                        معرفی دوره + چرا یادگیری کتابخانه ها ضروری
-                                                        است؟
-                                                    </Link>
-                                                </div>
-                                                <div className="text-[#7a7a7a]">18:34</div>
-                                            </div>
-                                        </div>
-                                    </AccordionItem>
-                                    <AccordionItem title="hello">
-                                        <div className="flex flex-col">
-                                            <div className="flex items-center justify-between border-b border-b-[#dee2e6] p-3 last:border-none ">
-                                                <div className="flex items-center gap-3">
-                                                    <span className="flex h-9 w-9 items-center justify-center rounded-full border border-[#bfbfbf] text-[#656464]">
-                                                        1
-                                                    </span>
-                                                    <FaYoutube className="text-xl text-[#939aa3]" />
-                                                    <Link
-                                                        to="/"
-                                                        className="text-[#161616] duration-300 hover:text-blue-hover"
-                                                    >
-                                                        معرفی دوره + چرا یادگیری کتابخانه ها ضروری
-                                                        است؟
-                                                    </Link>
-                                                </div>
-                                                <div className="text-[#7a7a7a]">18:34</div>
-                                            </div>
-                                            <div className="flex items-center justify-between border-b border-b-[#dee2e6] p-3 last:border-none ">
-                                                <div className="flex items-center gap-3">
-                                                    <span className="flex h-9 w-9 items-center justify-center rounded-full border border-[#bfbfbf] text-[#656464]">
-                                                        1
-                                                    </span>
-                                                    <FaYoutube className="text-xl text-[#939aa3]" />
-                                                    <Link
-                                                        to="/"
-                                                        className="text-[#161616] duration-300 hover:text-blue-hover"
-                                                    >
-                                                        معرفی دوره + چرا یادگیری کتابخانه ها ضروری
-                                                        است؟
-                                                    </Link>
-                                                </div>
-                                                <div className="text-[#7a7a7a]">18:34</div>
-                                            </div>
-                                            <div className="flex items-center justify-between border-b border-b-[#dee2e6] p-3 last:border-none ">
-                                                <div className="flex items-center gap-3">
-                                                    <span className="flex h-9 w-9 items-center justify-center rounded-full border border-[#bfbfbf] text-[#656464]">
-                                                        1
-                                                    </span>
-                                                    <FaYoutube className="text-xl text-[#939aa3]" />
-                                                    <Link
-                                                        to="/"
-                                                        className="text-[#161616] duration-300 hover:text-blue-hover"
-                                                    >
-                                                        معرفی دوره + چرا یادگیری کتابخانه ها ضروری
-                                                        است؟
-                                                    </Link>
-                                                </div>
-                                                <div className="text-[#7a7a7a]">18:34</div>
-                                            </div>
+                                            ))}
                                         </div>
                                     </AccordionItem>
                                 </Accordion>
@@ -366,7 +342,7 @@ const CourseInfo = () => {
                                     </div>
                                     <div className="flex flex-col gap-1 text-[#7b868a]">
                                         <Link to="/" className="duration-300 hover:text-blue-hover">
-                                            محمدامین سعیدی راد
+                                            {courseTeacher.name}
                                         </Link>
                                         <span className="text-xs">
                                             Front-End & Back-End Developer
@@ -384,14 +360,181 @@ const CourseInfo = () => {
                                 داشته باشم.و..
                             </p>
                         </div>
+                        <div className="mt-7 rounded-lg p-5 shadow-[0_0_13px_1px_rgba(70,72,77,0.08)]">
+                            <div className="mb-5 flex items-center gap-2">
+                                <div className="flex items-center justify-center rounded-md bg-primary-color p-2 text-2xl">
+                                    <BiMessage className="text-white" />
+                                </div>
+                                <h5 className="font-IRANSans-Medium text-lg text-dark-color">
+                                    نظرات
+                                </h5>
+                            </div>
+                            {comments.length ? (
+                                <div>
+                                    <ul className="mb-10">
+                                        {comments.map((comment) => (
+                                            <li
+                                                key={comment._id}
+                                                className="mb-5 flex justify-between rounded-lg border border-dashed border-gray-400 bg-[#f7f8fb] p-5 last:mb-0"
+                                            >
+                                                <div className="pl-5">
+                                                    <div className="mb-3 flex items-center gap-2.5">
+                                                        <h6 className="font-IRANSans-Medium text-md">
+                                                            {comment.creator.name}
+                                                        </h6>
+                                                        <span className="rounded-md bg-primary-color p-1.5 text-xs text-white">
+                                                            {comment.creator.role === "ADMIN"
+                                                                ? "مدیر"
+                                                                : "خریدار محصول"}
+                                                        </span>
+                                                        <span className="text-md text-gray-500">
+                                                            {comment.creator.createdAt.slice(0, 10)}
+                                                        </span>
+                                                    </div>
+                                                    <p className="text-sm text-dark-color">
+                                                        {comment.body}
+                                                    </p>
+                                                </div>
+                                                <div className="">
+                                                    <Button className="shrink-0 rounded-md border border-grey-color bg-white px-4 py-2 text-md text-gray-500">
+                                                        پاسخ
+                                                    </Button>
+                                                </div>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                    <div className="mt-10 flex w-full items-center justify-center gap-2">
+                                        <Button className="flex h-10 w-10 items-center justify-center rounded-md bg-[#f0f0f1] text-dark-color duration-300 hover:bg-primary-color hover:text-white">
+                                            <FaArrowRight />
+                                        </Button>
+                                        <ul className="flex items-center justify-center gap-2">
+                                            <li>
+                                                <Button className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-md bg-[#f0f0f1] text-dark-color duration-300 hover:bg-primary-color hover:text-white">
+                                                    1
+                                                </Button>
+                                            </li>
+                                            <li>
+                                                <Button className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-md bg-[#f0f0f1] text-dark-color duration-300 hover:bg-primary-color hover:text-white">
+                                                    2
+                                                </Button>
+                                            </li>
+                                            <li>
+                                                <Button className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-md bg-primary-color text-white duration-300 hover:bg-primary-color hover:text-white">
+                                                    3
+                                                </Button>
+                                            </li>
+                                        </ul>
+                                        <Button className="flex h-10 w-10 items-center justify-center rounded-md bg-[#f0f0f1] text-dark-color duration-300 hover:bg-primary-color hover:text-white">
+                                            <FaArrowLeft />
+                                        </Button>
+                                    </div>
+                                </div>
+                            ) : (
+                                <span className="mt-5 block w-full rounded-lg bg-yellow-50 p-5 text-yellow-400">
+                                    هنوز هیچ کامنتی ثبت نشده است.
+                                </span>
+                            )}
+                            {authContext.isLoggedIn ? (
+                                <div className="mt-10">
+                                    <div className="mb-5">
+                                        <h4 className="">قوانین ثبت دیدگاه:</h4>
+                                        <ul className="mt-2">
+                                            <li className="mb-1.5 flex gap-1 last:mb-0">
+                                                <FaCheck className="shrink-0 text-sm text-primary-color" />
+                                                <span className="mr-1 text-xs">
+                                                    اگر نیاز به پشتیبانی دوره دارید از قسمت پرسش
+                                                    سوال در قسمت نمایش آنلاین استفاده نمایید و
+                                                    سوالات مربوط به رفع اشکال تایید نخواهد شد.
+                                                </span>
+                                            </li>
+                                            <li className="mb-1.5 flex gap-1 last:mb-0">
+                                                <FaCheck className="shrink-0 text-sm text-primary-color" />
+                                                <span className="mr-1 text-xs">
+                                                    دیدگاه های نامربوط به دوره تایید نخواهد شد.
+                                                </span>
+                                            </li>
+                                            <li className="mb-1.5 flex gap-1 last:mb-0">
+                                                <FaCheck className="shrink-0 text-sm text-primary-color" />
+                                                <span className="mr-1 text-xs">
+                                                    سوالات مربط با رفع اشکال در این بخش تایید نخواهد
+                                                    شد.
+                                                </span>
+                                            </li>
+                                            <li className="mb-1.5 flex gap-1 last:mb-0">
+                                                <FaCheck className="shrink-0 text-sm text-primary-color" />
+                                                <span className="mr-1 text-xs">
+                                                    از درج دیدگاه های تکراری پرهیز نمایید.
+                                                </span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div className="rounded-lg bg-grey-color p-5">
+                                        <div className="mb-5">
+                                            <span className="mb-1 block">امتیاز شما</span>
+                                            <SelectMenu
+                                                items={[
+                                                    "رای دهید",
+                                                    "عالی",
+                                                    "خوب",
+                                                    "متوسط",
+                                                    "نه خیلی بد",
+                                                    "خیلی بد",
+                                                ]}
+                                                className={`w-full border ${
+                                                    isValidSelectMenu
+                                                        ? "border-green-500"
+                                                        : "border-red-500"
+                                                }`}
+                                                onChange={selectMenuChangeHandler}
+                                            />
+                                        </div>
+                                        <div className="">
+                                            <span className="mb-1 block">دیدگاه شما *</span>
+                                            <AppInput
+                                                type="text"
+                                                id="textarea"
+                                                onInputHandler={onInputHandler}
+                                                placeholder="دیدگاهتان را بنویسید..."
+                                                className="m-0 min-h-[200px] w-full resize-y rounded-md p-2 focus:outline-0"
+                                                validations={[requiredValidator()]}
+                                            />
+                                        </div>
+                                        <Button
+                                            className="mt-2 rounded-md bg-primary-color px-5 py-2 text-white disabled:opacity-50"
+                                            disabled={!formState.isFormValid || !isValidSelectMenu}
+                                            onclick={sendCommentHandler}
+                                        >
+                                            ارسال
+                                        </Button>
+                                    </div>
+                                </div>
+                            ) : (
+                                <div className="">
+                                    <h3 className="mb-3 text-xl">دیدگاه خود را بنویسید</h3>
+                                    <span className="block">
+                                        برای فرستادن دیدگاه باید ابتدا وارد
+                                        <Link>حساب کاربری </Link> خود شوید.
+                                    </span>
+                                </div>
+                            )}
+                        </div>
                     </div>
                     <div className="col-span-12 lg:col-span-4">
                         <div className="sticky top-4 z-10 flex flex-col gap-4">
                             <div className="rounded-lg p-5 shadow-[0_0_13px_1px_rgba(70,72,77,0.08)]">
-                                <div className="flex w-full select-none items-center justify-center gap-2 rounded-lg bg-[#1fbd50] p-3 font-IRANSans-Medium text-lg text-white shadow-[0_2px_12px_rgba(31,189,80,36%)]">
-                                    <FaGraduationCap className="text-3xl" />
-                                    دانشجوی دوره هستید
-                                </div>
+                                {courseDetails.isUserRegisteredToThisCourse ? (
+                                    <Button className="flex w-full cursor-default select-none items-center justify-center gap-2 rounded-lg bg-[#1fbd50] p-3 font-IRANSans-Medium text-lg text-white shadow-[0_2px_12px_rgba(31,189,80,36%)]">
+                                        <FaGraduationCap className="text-3xl" />
+                                        دانشجوی دوره هستید
+                                    </Button>
+                                ) : (
+                                    <Button
+                                        to="/"
+                                        className="flex w-full select-none items-center justify-center gap-2 rounded-lg bg-[#1fbd50] p-3 font-IRANSans-Medium text-lg text-white shadow-[0_2px_12px_rgba(31,189,80,36%)]"
+                                    >
+                                        ثبت نام در دوره
+                                    </Button>
+                                )}
                             </div>
                             <div className="rounded-lg p-5 shadow-[0_0_13px_1px_rgba(70,72,77,0.08)]">
                                 <div className="flex items-center justify-center gap-2 rounded-lg border-2 border-[#f0f2f7] p-3 text-center">
@@ -400,7 +543,7 @@ const CourseInfo = () => {
                                         تعداد دانشجو:
                                     </span>
                                     <span className="rounded-md bg-[#c4c7cf] px-3 py-1 text-white">
-                                        178
+                                        {courseDetails.courseStudentsCount}
                                     </span>
                                 </div>
                                 <div className="mt-5 flex select-none items-center justify-center gap-5">
