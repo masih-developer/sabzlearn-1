@@ -1,17 +1,23 @@
-import { useState } from "react";
-import {
-    FaBorderAll,
-    FaAlignLeft,
-    FaAngleDown,
-    FaSearch,
-    FaArrowLeft,
-    FaArrowRight,
-} from "react-icons/fa";
+import { useEffect, useState } from "react";
+import { FaBorderAll, FaAlignLeft, FaAngleDown, FaSearch } from "react-icons/fa";
 import CourseBox from "../components/common/CourseBox";
+import { useParams } from "react-router-dom";
+import Pagination from "../components/common/Pagination";
 
 const Category = () => {
+    const { categoryName } = useParams();
+    const [courses, setCourses] = useState([]);
+    const [paginatedItems, setPaginatedItems] = useState([]);
     const [isOpenMenu, setIsOpenMenu] = useState(false);
     const [sortingCategoryBy, setSortingCategoryBy] = useState("مرتب سازی پیش فرض");
+
+    useEffect(() => {
+        fetch(`http://localhost:4000/v1/courses/category/${categoryName}`)
+            .then((res) => res.json())
+            .then((result) => {
+                setCourses(result);
+            });
+    }, [categoryName]);
 
     return (
         <div className="mt-28 lg:mt-5">
@@ -74,59 +80,36 @@ const Category = () => {
                         <FaSearch className="shrink-0 text-lg text-dark-color" />
                     </div>
                 </div>
-                <div className="grid grid-cols-1 gap-x-4 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
-                    <CourseBox
-                        hoverEffect
-                        img="/images/courses/fareelancer.png"
-                        title="دوره پروژه های فریلنسری"
-                        teacher="رضا دولتی"
-                        studentCount="1000"
-                        price={2_000_000}
+                {courses.length ? (
+                    <div className="grid grid-cols-1 gap-x-4 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
+                        {paginatedItems.map((course) => (
+                            <CourseBox
+                                key={course._id}
+                                hoverEffect
+                                img={course.cover}
+                                title={course.name}
+                                teacher={course.creator}
+                                studentCount={course.registers}
+                                price={course.price}
+                                path={course.shortName}
+                            />
+                        ))}
+                    </div>
+                ) : (
+                    <div className="texty flex h-20 w-full items-center justify-center rounded-lg bg-yellow-100 text-yellow-500">
+                        <h2 className="font-IRANSans-Medium text-xl">
+                            هیچ دوره ای برای نمایش وجود ندارد.
+                        </h2>
+                    </div>
+                )}
+                {courses.length ? (
+                    <Pagination
+                        items={courses}
+                        itemsCount={6}
+                        pathname={`/category-info/${categoryName}`}
+                        setPaginatedItems={setPaginatedItems}
                     />
-                    <CourseBox
-                        hoverEffect
-                        img="/images/courses/jango.png"
-                        title="دوره پروژه های فریلنسری"
-                        teacher="رضا دولتی"
-                        studentCount="1000"
-                        price={2_000_000}
-                    />
-                    <CourseBox
-                        hoverEffect
-                        img="/images/courses/js_project.png"
-                        title="دوره پروژه های فریلنسری"
-                        teacher="رضا دولتی"
-                        studentCount="1000"
-                        price={2_000_000}
-                    />
-                    <CourseBox
-                        hoverEffect
-                        img="/images/courses/js_project.png"
-                        title="دوره پروژه های فریلنسری"
-                        teacher="رضا دولتی"
-                        studentCount="1000"
-                        price={2_000_000}
-                    />
-                </div>
-                <div className="mt-10 flex w-full items-center justify-center gap-2">
-                    <button className="flex h-10 w-10 items-center justify-center rounded-md bg-[#f0f0f1] text-dark-color duration-300 hover:bg-primary-color hover:text-white">
-                        <FaArrowRight />
-                    </button>
-                    <ul className="flex items-center justify-center gap-2">
-                        <li className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-md bg-[#f0f0f1] text-dark-color duration-300 hover:bg-primary-color hover:text-white">
-                            1
-                        </li>
-                        <li className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-md bg-[#f0f0f1] text-dark-color duration-300 hover:bg-primary-color hover:text-white">
-                            2
-                        </li>
-                        <li className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-md bg-[#f0f0f1] text-dark-color duration-300 hover:bg-primary-color hover:text-white">
-                            3
-                        </li>
-                    </ul>
-                    <button className="flex h-10 w-10 items-center justify-center rounded-md bg-[#f0f0f1] text-dark-color duration-300 hover:bg-primary-color hover:text-white">
-                        <FaArrowLeft />
-                    </button>
-                </div>
+                ) : null}
             </div>
         </div>
     );

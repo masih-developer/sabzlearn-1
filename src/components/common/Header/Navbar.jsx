@@ -47,7 +47,7 @@ const Navbar = () => {
                     {allMenuItems.map((item) => (
                         <li className="group/icon group/megamenu relative py-3" key={item._id}>
                             <Link
-                                to={item.href}
+                                to={`${item.href}/1`}
                                 className="flex items-center justify-center gap-1 text-[#7f8187] transition-colors hover:text-dark-color"
                             >
                                 {item.title}
