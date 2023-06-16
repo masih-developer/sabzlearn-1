@@ -5,6 +5,7 @@ import SidebarProvider from "./context/SidebarProvider";
 import Footer from "./components/common/Footer";
 import AuthProvider from "./context/AuthProvider";
 import { Toaster } from "react-hot-toast";
+import ScrollToTop from "./components/common/ScrollToTop";
 const App = () => {
     const router = useRoutes(routes);
 
@@ -12,10 +13,12 @@ const App = () => {
         <>
             <AuthProvider>
                 <SidebarProvider>
-                    <Header />
-                    <Toaster position="top-center" reverseOrder={false} />
-                    <main>{router}</main>
-                    <Footer />
+                    <ScrollToTop>
+                        <Header />
+                        <Toaster position="top-center" reverseOrder={false} />
+                        <main>{router}</main>
+                        <Footer />
+                    </ScrollToTop>
                 </SidebarProvider>
             </AuthProvider>
         </>
