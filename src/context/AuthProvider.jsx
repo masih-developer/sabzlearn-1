@@ -6,6 +6,7 @@ export const AuthContext = createContext({
     userInfos: {},
     login: () => {},
     logout: () => {},
+    checkIsLoggedInUser: () => {},
 });
 
 const AuthProvider = ({ children }) => {
@@ -26,7 +27,14 @@ const AuthProvider = ({ children }) => {
         localStorage.removeItem("user");
     }, []);
 
-    const checkLocalStorageUser = () => {
+    const checkIsLoggedInUser = () => {
+        const localStorageUserData = JSON.parse(localStorage.getItem("user"));
+        if (!localStorageUserData) {
+            logout();
+        }
+    };
+
+    const checkUserInLocalStorage = () => {
         const localStorageUserData = JSON.parse(localStorage.getItem("user"));
         if (localStorageUserData) {
             fetch("http://localhost:4000/v1/auth/me", {
@@ -43,11 +51,13 @@ const AuthProvider = ({ children }) => {
     };
 
     useEffect(() => {
-        checkLocalStorageUser();
+        checkUserInLocalStorage();
     }, [token]);
 
     return (
-        <AuthContext.Provider value={{ isLoggedIn, token, userInfos, login, logout }}>
+        <AuthContext.Provider
+            value={{ isLoggedIn, token, userInfos, login, logout, checkIsLoggedInUser }}
+        >
             {children}
         </AuthContext.Provider>
     );
