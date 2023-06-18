@@ -13,11 +13,30 @@ import {
     FaTwitter,
 } from "react-icons/fa";
 import Breadcrumb from "../components/common/Breadcrumb";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import ArticleInfoBox from "../components/ArticleInfoPage/ArticleInfoBox";
 import CommentTextarea from "../components/ArticleInfoPage/CommentTextarea";
+import { useEffect, useState } from "react";
 
 const ArticleInfo = () => {
+    const { articleName } = useParams();
+    const [articleInfo, setArticleInfo] = useState([]);
+    const [articleCategory, setArticleCategory] = useState({});
+    const [articleCreator, setArticleCreator] = useState({});
+    const [articleCreatedAt, setArticleCreatedAt] = useState("");
+
+    useEffect(() => {
+        fetch(`http://localhost:4000/v1/articles/${articleName}`)
+            .then((res) => res.json())
+            .then((articleInfo) => {
+                console.log(articleInfo);
+                setArticleInfo(articleInfo);
+                setArticleCategory(articleInfo.categoryID);
+                setArticleCreator(articleInfo.creator);
+                setArticleCreatedAt(articleInfo.createdAt);
+            });
+    }, []);
+
     return (
         <div>
             <div className="container mt-20 lg:mt-5">
@@ -36,7 +55,7 @@ const ArticleInfo = () => {
                     <div className="col-span-12 lg:col-span-8">
                         <div className="rounded-lg px-5 py-7 shadow-[0_5px_30px_rgba(70,72,77,0.08)]">
                             <h1 className="border-b-2 border-b-[#f3f3f3] pb-3 font-IRANSans-Bold text-xl text-dark-color lg:text-2xl">
-                                معرفی بهترین سایت آموزش جاوا اسکریپت [ تجربه محور ] + آموزش رایگان
+                                {articleInfo.title}
                             </h1>
                             <div className="my-5 flex flex-wrap items-center gap-x-5 gap-y-3">
                                 <div className="flex items-center gap-1.5 text-[#8f8f8f]">
@@ -45,16 +64,20 @@ const ArticleInfo = () => {
                                         to="/"
                                         className="text-xs duration-300 hover:text-blue-hover"
                                     >
-                                        جاوا اسکریپت
+                                        {articleCategory.title}
                                     </Link>
                                 </div>
                                 <div className="flex items-center gap-1.5 text-[#8f8f8f]">
                                     <FaRegUser className="text-lg" />
-                                    <span className="text-xs">ارسال شده توسط قدیر</span>
+                                    <span className="text-xs">
+                                        ارسال شده توسط {articleCreator.name}
+                                    </span>
                                 </div>
                                 <div className="flex items-center gap-1.5 text-[#8f8f8f]">
                                     <FaRegClock className="text-lg" />
-                                    <span className="text-xs">ارسال شده توسط قدیر</span>
+                                    <span className="text-xs">
+                                        تاریخ انتشار: {articleCreatedAt.slice(0, 10)}
+                                    </span>
                                 </div>
                                 <div className="flex items-center gap-1.5 text-[#8f8f8f]">
                                     <FaRegEye className="text-lg" />
@@ -62,7 +85,7 @@ const ArticleInfo = () => {
                                 </div>
                             </div>
                             <img
-                                src="/images/blog/1.jpg"
+                                src={`http://localhost:4000/courses/covers/${articleInfo.cover}`}
                                 alt=""
                                 className="mb-7 block w-full object-cover"
                             />
