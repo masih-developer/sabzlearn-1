@@ -3,7 +3,7 @@ import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 import { useNavigate, useParams } from "react-router-dom";
 import Button from "./Button";
 
-const Pagination = ({ items, itemsCount, pathname, setPaginatedItems }) => {
+const Pagination = ({ items, itemsCount, pathname, setShownCourses }) => {
     const [pageCount, setPageCount] = useState(null);
     const { page } = useParams();
     const navigate = useNavigate();
@@ -11,9 +11,11 @@ const Pagination = ({ items, itemsCount, pathname, setPaginatedItems }) => {
     useEffect(() => {
         let endIndex = itemsCount * page;
         let startIndex = endIndex - itemsCount;
-        setPaginatedItems(items.slice(startIndex, endIndex));
+        let paginatedItems = items.slice(startIndex, endIndex);
+        setShownCourses(paginatedItems);
+
         setPageCount(Math.ceil(items.length / itemsCount));
-    }, [page, items, pageCount, setPaginatedItems, itemsCount]);
+    }, [page, items]);
 
     return (
         <div className="mt-10 flex w-full items-center justify-center gap-2">
