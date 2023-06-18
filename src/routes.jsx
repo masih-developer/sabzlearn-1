@@ -6,10 +6,12 @@ import NotFound from "./pages/NotFound";
 import Courses from "./pages/Courses";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import Articles from "./pages/Articles";
 
 const routes = [
     { path: "/", element: <Home /> },
     { path: "/courses/:page", element: <Courses /> },
+    { path: "/articles/:page", element: <Articles /> },
     { path: "/article-info/:articleName", element: <ArticleInfo /> },
     { path: "/category-info/:categoryName/:page", element: <Category /> },
     { path: "/course-info/:courseName", element: <CourseInfo /> },
