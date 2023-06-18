@@ -44,7 +44,7 @@ const Courses = () => {
                             items={allCourses}
                             itemsCount={6}
                             pathname="/courses"
-                            setPaginatedItems={setPaginatedItems}
+                            setShownCourses={setPaginatedItems}
                         />
                     </>
                 ) : (

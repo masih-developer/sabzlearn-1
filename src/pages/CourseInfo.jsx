@@ -135,10 +135,9 @@ const CourseInfo = () => {
                         { id: 1, title: "خانه", path: "/" },
                         {
                             id: 2,
-                            title: "آموزش برنامه نویسی فرانت اند",
-                            path: "/course-info/frontend",
+                            title: courseDetails.name,
+                            path: `/course-info/${courseDetails.shortName}`,
                         },
-                        { id: 3, title: "دوره متخصص جاوا اسکریپت", path: "/course-info/js-expert" },
                     ]}
                 />
                 <section className="my-5 grid grid-cols-1 gap-10 rounded-lg p-2 shadow-[0_0_13px_1px_rgba(70,72,77,0.08)] sm:p-5 lg:grid-cols-2 lg:gap-5">
