@@ -3,8 +3,19 @@ import "swiper/css";
 
 import SectionTitle from "../common/SectionTitle";
 import CourseBox from "../common/CourseBox";
+import { useEffect, useState } from "react";
 
 const PopularCourses = () => {
+    const [courses, setCourses] = useState([]);
+
+    useEffect(() => {
+        fetch("http://localhost:4000/v1/courses/popular")
+            .then((res) => res.json())
+            .then((result) => {
+                setCourses(result);
+            });
+    }, []);
+
     return (
         <section className="mt-20">
             <div className="container">
@@ -32,66 +43,19 @@ const PopularCourses = () => {
                         loop={true}
                         className="py-1"
                     >
-                        <SwiperSlide>
-                            <CourseBox
-                                img="./images/courses/fareelancer.png"
-                                title="دوره متخصص جنگو"
-                                teacher="رضا دولتی"
-                                rate={5}
-                                studentCount={1000}
-                                price={2_000_000}
-                            />
-                        </SwiperSlide>
-                        <SwiperSlide>
-                            <CourseBox
-                                img="./images/courses/nodejs.png"
-                                title="دوره متخصص جنگو"
-                                teacher="رضا دولتی"
-                                rate={5}
-                                studentCount={1000}
-                                price={2_000_000}
-                            />
-                        </SwiperSlide>
-                        <SwiperSlide>
-                            <CourseBox
-                                img="./images/courses/youtuber.png"
-                                title="دوره متخصص جنگو"
-                                teacher="رضا دولتی"
-                                rate={5}
-                                studentCount={1000}
-                                price={2_000_000}
-                            />
-                        </SwiperSlide>
-                        <SwiperSlide>
-                            <CourseBox
-                                img="./images/courses/js_project.png"
-                                title="دوره متخصص جنگو"
-                                teacher="رضا دولتی"
-                                rate={5}
-                                studentCount={1000}
-                                price={2_000_000}
-                            />
-                        </SwiperSlide>
-                        <SwiperSlide>
-                            <CourseBox
-                                img="./images/courses/jango.png"
-                                title="دوره متخصص جنگو"
-                                teacher="رضا دولتی"
-                                rate={5}
-                                studentCount={1000}
-                                price={2_000_000}
-                            />
-                        </SwiperSlide>
-                        <SwiperSlide>
-                            <CourseBox
-                                img="./images/courses/jango.png"
-                                title="دوره متخصص جنگو"
-                                teacher="رضا دولتی"
-                                rate={5}
-                                studentCount={1000}
-                                price={2_000_000}
-                            />
-                        </SwiperSlide>
+                        {courses.map((course) => (
+                            <SwiperSlide key={course._id}>
+                                <CourseBox
+                                    img={course.cover}
+                                    title={course.name}
+                                    teacher={course.creator}
+                                    rate={5}
+                                    studentCount={course.registers}
+                                    price={course.price}
+                                    path={course.shortName}
+                                />
+                            </SwiperSlide>
+                        ))}
                     </Swiper>
                 </div>
             </div>
