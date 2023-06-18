@@ -3,7 +3,7 @@ import ArticleBoxes from "../components/HomePage/ArticleBoxes";
 import Landing from "../components/HomePage/Landing";
 import LatestCourses from "../components/HomePage/LatestCourses";
 import PopularCourses from "../components/HomePage/PopularCourses";
-import PreSaleCourses from "../components/HomePage/PreSaleCourses";
+import PreSellCourses from "../components/HomePage/PreSellCourses";
 
 const Home = () => {
     return (
@@ -12,7 +12,7 @@ const Home = () => {
             <LatestCourses />
             <AboutUs />
             <PopularCourses />
-            <PreSaleCourses />
+            <PreSellCourses />
             <ArticleBoxes />
         </>
     );
