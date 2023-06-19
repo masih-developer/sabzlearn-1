@@ -1,4 +1,32 @@
+import { toast } from "react-hot-toast";
+import useForm from "../../hooks/useForm";
+import { emailValidator } from "../../validators/rules";
+import AppInput from "../common/AppInput";
+
 const Footer = () => {
+    const [formState, onInputHandler] = useForm({ email: { value: "", isValid: false } }, false);
+
+    const submitFormHandler = (e) => {
+        e.preventDefault();
+        const userEmail = { email: formState.inputs.email.value };
+
+        const sendEmailHandler = async () => {
+            await fetch("http://localhost:4000/v1/newsletters", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(userEmail),
+            });
+        };
+
+        toast.promise(sendEmailHandler(), {
+            loading: "درحال ارسال...",
+            success: "ایمیل شما با موفقیت ارسال شد.",
+            error: "ارسال ایمیل با خطا مواجه شد.",
+        });
+    };
+
     return (
         <footer className="mt-20">
             <div className="container">
@@ -113,6 +141,33 @@ const Footer = () => {
                                     </a>
                                 </li>
                             </ul>
+                        </div>
+                        <div className="mt-10 flex flex-col">
+                            <h3 className="footer-title">عضویت در خبرنامه</h3>
+                            <h5 className="my-5 text-sm text-dark-color lg:text-md">
+                                جهت اطلاع از آخرین اخبار و تخفیف های سایت، مشترک شوید!
+                            </h5>
+                            <form
+                                onSubmit={(e) => submitFormHandler(e)}
+                                className="flex h-10 items-center overflow-hidden rounded-md"
+                            >
+                                <AppInput
+                                    type="text"
+                                    id="email"
+                                    elem="input"
+                                    onInputHandler={onInputHandler}
+                                    validations={[emailValidator()]}
+                                    placeholder="ایمیل خود را وارد کنید..."
+                                    className="h-full w-full rounded-br-md rounded-tr-md p-2 outline-none"
+                                />
+                                <button
+                                    type="submit"
+                                    className="block h-full shrink-0 bg-primary-color px-3 py-1 text-white disabled:opacity-70"
+                                    disabled={!formState.isFormValid}
+                                >
+                                    عضویت
+                                </button>
+                            </form>
                         </div>
                     </div>
                 </div>
