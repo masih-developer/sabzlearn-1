@@ -37,34 +37,49 @@ const Login = () => {
         };
 
         setIsLoadingLogginBtn(true);
-        fetch("http://localhost:4000/v1/auth/login", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(userData),
-        })
-            .then(async (res) => {
-                if (!res.ok) {
-                    toast.error("هیچ کاربری با این ایمیل یا نام کاربری وجود ندارد.");
-                    return res.text().then((text) => {
-                        throw new Error(text);
-                    });
+        const loginUserHandler = async () => {
+            try {
+                const response = await fetch("http://localhost:4000/v1/auth/login", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(userData),
+                });
+
+                console.log(response);
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(errorText);
                 }
-                return res.json();
-            })
-            .then((result) => {
+
+                const result = await response.json();
                 toast.success("به حساب کاربری خود خوش آمدید.");
-                return result;
-            })
-            .then((value) => {
-                authContext.login(value.accessToken);
+                authContext.login(result.accessToken);
                 navigate("/");
-            })
-            .catch((err) => {
-                console.error(err);
-            })
-            .finally(() => setIsLoadingLogginBtn(false));
+            } catch (error) {
+                const errorMsg = JSON.parse(`${error.message}`);
+                console.log(error);
+                if (
+                    errorMsg === "password is not correct" ||
+                    errorMsg.message === "password is not correct"
+                ) {
+                    toast.error("رمز عبور صحیح نمی باشد.");
+                }
+
+                if (
+                    errorMsg === "there is no user with this email or username" ||
+                    errorMsg.message === "there is no user with this email or username"
+                ) {
+                    toast.error("هیچ کاربری با این ایمیل یا نام کاربری وجود ندارد.");
+                }
+            } finally {
+                setIsLoadingLogginBtn(false);
+            }
+        };
+
+        loginUserHandler();
     };
 
     const onChangeHandler = () => {
