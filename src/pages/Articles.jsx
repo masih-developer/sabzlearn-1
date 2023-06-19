@@ -16,7 +16,7 @@ const Articles = () => {
     }, []);
 
     return (
-        <div>
+        <div className="mt-24 lg:mt-0">
             <div className="container">
                 <Breadcrumb
                     links={[
