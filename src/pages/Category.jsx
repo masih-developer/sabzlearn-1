@@ -12,6 +12,7 @@ const Category = () => {
     const [shownCourses, setShownCourses] = useState([]);
     const [menuStatus, setMenuStatus] = useState("مرتب سازی پیش فرض");
     const [searchValue, setSearchValue] = useState("");
+    const [showCourseType, setShowCourseType] = useState("row");
 
     useEffect(() => {
         fetch(`http://localhost:4000/v1/courses/category/${categoryName}`)
@@ -84,10 +85,26 @@ const Category = () => {
                         <div className="mb-5 flex flex-col items-center justify-between gap-3 rounded-lg p-5 shadow-[0_0_13px_1px_rgba(70,72,77,0.08)] md:flex-row lg:gap-0">
                             <div className="flex w-full flex-col items-center gap-3 md:flex-row">
                                 <div className="flex items-center justify-center gap-3 self-start">
-                                    <button className="flex h-10 w-10 items-center justify-center rounded-md border border-[#e5e5e5] bg-blue-hover text-white">
+                                    <button
+                                        className={`flex h-10 w-10 items-center justify-center rounded-md border border-[#e5e5e5] ${
+                                            showCourseType === "row"
+                                                ? "bg-blue-hover text-white"
+                                                : "bg-none text-dark-color"
+                                        }`}
+                                        title="row"
+                                        onClick={() => setShowCourseType("row")}
+                                    >
                                         <FaBorderAll />
                                     </button>
-                                    <button className="flex h-10 w-10 items-center justify-center rounded-md border border-[#e5e5e5]">
+                                    <button
+                                        className={`flex h-10 w-10 items-center justify-center rounded-md border border-[#e5e5e5] ${
+                                            showCourseType === "column"
+                                                ? "bg-blue-hover text-white"
+                                                : "bg-none text-dark-color"
+                                        }`}
+                                        title="column"
+                                        onClick={() => setShowCourseType("column")}
+                                    >
                                         <FaAlignLeft />
                                     </button>
                                 </div>
