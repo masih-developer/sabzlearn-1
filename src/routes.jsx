@@ -7,6 +7,7 @@ import Courses from "./pages/Courses";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Articles from "./pages/Articles";
+import Contact from "./pages/Contact";
 
 const routes = [
     { path: "/", element: <Home /> },
@@ -17,6 +18,7 @@ const routes = [
     { path: "/course-info/:courseName", element: <CourseInfo /> },
     { path: "/login", element: <Login /> },
     { path: "/register", element: <Register /> },
+    { path: "/contact", element: <Contact /> },
     { path: "*", element: <NotFound /> },
 ];
 
