@@ -1,8 +1,32 @@
 import { FaSearch } from "react-icons/fa";
 import TypeWritterComponent from "typewriter-effect";
 import LndingCounter from "./LndingCounter";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Landing = () => {
+    const [searchValue, setSearchValue] = useState("");
+    const [isValidSearch, setIsValidSearch] = useState(false);
+    const navigate = useNavigate();
+
+    const searchValueHandler = (e) => {
+        const value = e.target.value;
+        setSearchValue(value);
+    };
+
+    useEffect(() => {
+        if (searchValue.trim() === "") {
+            setIsValidSearch(false);
+            return;
+        }
+        setIsValidSearch(true);
+    }, [searchValue]);
+
+    const submitHandler = (e) => {
+        e.preventDefault();
+        navigate(`/search/${searchValue}`);
+    };
+
     return (
         <section className="bg-[linear-gradient(to_right_bottom,rgba(0,0,0,.6),rgba(0,0,0,.6)),url('/images/background_landing.jfif')] bg-cover bg-center px-3 py-24 text-center text-white">
             <h1 className="font-IRANSans-Medium text-4xl font-medium">
@@ -24,16 +48,25 @@ const Landing = () => {
             <p className="mb-5 mt-10">
                 با آکادمی سبزلرن، برنامه نویسی رو با خیال راحت یاد بگیر و پیشرفت کن.
             </p>
-            <div className="mx-auto flex w-[700px] max-w-full items-center justify-center overflow-hidden rounded-lg bg-white p-2 lg:p-3">
+            <form
+                onSubmit={(e) => submitHandler(e)}
+                className="mx-auto flex w-[700px] max-w-full items-center justify-center overflow-hidden rounded-lg bg-white p-2 lg:p-3"
+            >
                 <input
                     type="text"
+                    value={searchValue}
+                    onChange={(e) => searchValueHandler(e)}
                     className="block h-full w-full border-red-400 pl-3 text-dark-color outline-0"
                     placeholder="چه چیزی دوست داری یاد بگیری..."
                 />
-                <button className="flex shrink-0 items-center justify-center rounded-lg bg-primary-color p-2.5 text-lg lg:p-4 lg:text-2xl">
+                <button
+                    type="submit"
+                    className="flex shrink-0 items-center justify-center rounded-lg bg-primary-color p-2.5 text-lg disabled:opacity-70 lg:p-4 lg:text-2xl"
+                    disabled={!isValidSearch}
+                >
                     <FaSearch />
                 </button>
-            </div>
+            </form>
             <div className="mt-10 flex flex-wrap items-center justify-center gap-20 lg:gap-40">
                 <div className="flex flex-col items-center justify-center fill-white text-white">
                     <svg

@@ -8,6 +8,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Articles from "./pages/Articles";
 import Contact from "./pages/Contact";
+import Search from "./pages/Search";
 
 const routes = [
     { path: "/", element: <Home /> },
@@ -19,6 +20,7 @@ const routes = [
     { path: "/login", element: <Login /> },
     { path: "/register", element: <Register /> },
     { path: "/contact", element: <Contact /> },
+    { path: "/search/:value", element: <Search /> },
     { path: "*", element: <NotFound /> },
 ];
 
