@@ -12,5 +12,6 @@ module.exports = {
     rules: {
         "react/prop-types": [2, { skipUndeclared: true }],
         "react-refresh/only-export-components": "warn",
+        "react-hooks/exhaustive-deps": "off",
     },
 };
