@@ -47,7 +47,7 @@ const Navbar = () => {
                     {allMenuItems.map((item) => (
                         <li className="group/icon group/megamenu relative py-3" key={item._id}>
                             <Link
-                                to={`${item.href}/1`}
+                                to={`/category-info/${item.href}/1`}
                                 className="flex items-center justify-center gap-1 text-[#7f8187] transition-colors hover:text-dark-color"
                             >
                                 {item.title}
@@ -60,7 +60,7 @@ const Navbar = () => {
                                     {item.submenus.map((submenu) => (
                                         <li className="w-100 block" key={submenu._id}>
                                             <Link
-                                                to={submenu.href}
+                                                to={`/course-info/${submenu.href}`}
                                                 className="block py-2 text-md text-dark-color duration-300 hover:text-blue-hover"
                                             >
                                                 {submenu.title}
