@@ -47,6 +47,9 @@ const AuthProvider = ({ children }) => {
                     setIsLoggedIn(true);
                     setUserInfos(data);
                 });
+        } else {
+            setIsLoggedIn(false);
+            setUserInfos([]);
         }
     };
 
