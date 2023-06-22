@@ -9,6 +9,9 @@ import Register from "./pages/Register";
 import Articles from "./pages/Articles";
 import Contact from "./pages/Contact";
 import Search from "./pages/Search";
+import AdminPanel from "./pages/AdminPanel/index";
+import Users from "./pages/AdminPanel/Users";
+import AdminPanelCourses from "./pages/AdminPanel/Courses";
 
 const routes = [
     { path: "/", element: <Home /> },
@@ -22,6 +25,14 @@ const routes = [
     { path: "/contact", element: <Contact /> },
     { path: "/search/:value", element: <Search /> },
     { path: "*", element: <NotFound /> },
+    {
+        path: "/p-admin/*",
+        element: <AdminPanel />,
+        children: [
+            { path: "users", element: <Users /> },
+            { path: "courses", element: <AdminPanelCourses /> },
+        ],
+    },
 ];
 
 export default routes;
