@@ -1,5 +1,5 @@
 import { FaEnvelope, FaLockOpen, FaUser, FaUserEdit, FaUserPlus } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import AppInput from "../components/common/AppInput";
 import Button from "../components/common/Button";
 import {
@@ -17,6 +17,7 @@ import { toast } from "react-hot-toast";
 
 const Register = () => {
     const authContext = useContext(AuthContext);
+    const navigate = useNavigate();
     const [formState, onInputHandler] = useForm(
         {
             name: {
@@ -58,7 +59,7 @@ const Register = () => {
                 name: formState.inputs.name.value,
                 phone: formState.inputs.phone.value,
             };
-
+            const toastID = toast.loading("درحال ایجاد حساب");
             fetch("http://localhost:4000/v1/auth/register", {
                 method: "POST",
                 headers: {
@@ -66,18 +67,29 @@ const Register = () => {
                 },
                 body: JSON.stringify(newUser),
             })
-                .then((res) => res.json())
-                .then(() => {
-                    toast.success("حساب کاربری با موفقیت ساخته شد.");
-                })
-                .then((result) => {
-                    if (result.accessToken) {
-                        authContext.login(result.accessToken);
+                .then((res) => {
+                    console.log(res);
+                    if (res.ok) {
+                        return res.json();
+                    } else {
+                        throw new Error(`${res.status}`);
                     }
                 })
+                .then((result) => {
+                    console.log(result);
+                    toast.success("حساب کاربری با موفقیت ساخته شد.", { id: toastID });
+                    authContext.login(result.accessToken);
+                    navigate("/");
+                })
                 .catch((err) => {
-                    console.log(err);
-                    toast.error("خطا در انجام عملیات ساخت حساب!");
+                    if (+err.message === 403) {
+                        toast.error("حساب این کاربر با این شماره تلفن مسدود شده است.", {
+                            duration: 5000,
+                            id: toastID,
+                        });
+                        return;
+                    }
+                    toast.error("انجام عملیات ثبت نام با خطا مواجه شد.", { id: toastID });
                 });
         }
     };
