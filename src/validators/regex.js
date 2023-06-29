@@ -8,4 +8,9 @@ const testPhone = (value) => {
     return phonePattern.test(value);
 };
 
-export default { testEmail, testPhone };
+const testEnglishLetters = (value) => {
+    const englishLettersPattern = /^[A-Za-z\-_ ]+$/g;
+    return englishLettersPattern.test(value);
+};
+
+export default { testEmail, testPhone, testEnglishLetters };

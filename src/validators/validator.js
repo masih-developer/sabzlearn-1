@@ -21,6 +21,9 @@ const validator = (value, validations) => {
         if (validate.value === rules.confirmPassword) {
             if (value.trim() !== validate.depenValue) return false;
         }
+        if (validate.value === rules.englishLetters) {
+            if (!regex.testEnglishLetters(value)) return false;
+        }
     }
 
     return true;

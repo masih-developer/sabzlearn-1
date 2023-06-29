@@ -4,6 +4,7 @@ const maxValue = "MAX_VALUE";
 const emailValue = "EMAIL_VALUE";
 const phoneValue = "PHONE_VALUE";
 const confirmPassword = "CONFIRM_PASSWORD";
+const englishLetters = "ENGLISH_LETTERS";
 
 export const requiredValidator = () => ({ value: requiredValue });
 
@@ -17,4 +18,14 @@ export const phoneNumberValidator = () => ({ value: phoneValue });
 
 export const confirmPassValidator = (depenValue) => ({ value: confirmPassword, depenValue });
 
-export default { requiredValue, minValue, maxValue, emailValue, phoneValue, confirmPassword };
+export const englishLettersValidator = () => ({ value: englishLetters });
+
+export default {
+    requiredValue,
+    minValue,
+    maxValue,
+    emailValue,
+    phoneValue,
+    confirmPassword,
+    englishLetters,
+};
