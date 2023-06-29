@@ -35,3 +35,18 @@
         @apply relative block font-IRANSans-Medium text-lg before:absolute before:bottom-0 before:right-2 before:top-0 before:m-auto before:h-9 before:w-9 before:rotate-45 before:rounded-lg before:bg-primary-color before:opacity-30 before:content-[""];
     }
 }
+
+.ReactModal__Content--after-open {
+    padding: 0 !important;
+    inset: unset !important;
+    max-width: 100%;
+}
+
+.ReactModal__Overlay--after-open {
+    z-index: 10000 !important;
+    background-color: rgba(0, 0, 0, 0.5) !important;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: 0.3s;
+}
