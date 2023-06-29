@@ -35,7 +35,7 @@ const AppInput = (props) => {
             <input
                 type={type}
                 placeholder={placeholder}
-                className={`${className} ${
+                className={`outline-0 ${className} ${
                     mainInput.isValid ? "border border-green-500" : "border border-red-500"
                 }`}
                 id={id}
@@ -47,7 +47,7 @@ const AppInput = (props) => {
             <textarea
                 name={name}
                 id={id}
-                className={`${className} ${
+                className={`outline-0 ${className} ${
                     mainInput.isValid ? "border border-green-500" : "border border-red-500"
                 }`}
                 placeholder={placeholder}
