@@ -16,7 +16,7 @@ const Topbar = () => {
     }, []);
 
     return (
-        <div className="fixed left-0 top-0 mr-auto flex h-16 w-full items-center bg-white shadow-[0px_10px_10px_rgba(0,0,0,0.1)] lg:w-[calc(100%-250px)]">
+        <div className="fixed left-0 top-0 z-50 mr-auto flex h-16 w-full items-center bg-white shadow-[0px_10px_10px_rgba(0,0,0,0.1)] lg:w-[calc(100%-250px)]">
             <div className="container">
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-5">
