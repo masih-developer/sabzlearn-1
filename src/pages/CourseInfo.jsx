@@ -42,6 +42,7 @@ const CourseInfo = () => {
     const [sessions, setSessions] = useState([]);
     const [createdAt, setCreatedAt] = useState("");
     const [updatedAt, setUpdatedAt] = useState("");
+    const [categoryID, setCategoryID] = useState({});
     const [courseTeacher, setCourseTeacher] = useState({});
     const [isValidSelectMenu, setIsValidSelectMenu] = useState(false);
     const [selectMenuActiveIem, setSelectMenuActiveIem] = useState("رای دهید");
@@ -69,6 +70,7 @@ const CourseInfo = () => {
                     setSessions(result.sessions);
                     setCreatedAt(result.createdAt);
                     setUpdatedAt(result.updatedAt);
+                    setCategoryID(result.categoryID);
                     setCourseTeacher(result.creator);
                 });
         }
@@ -143,7 +145,7 @@ const CourseInfo = () => {
                 <section className="my-5 grid grid-cols-1 gap-10 rounded-lg p-2 shadow-[0_0_13px_1px_rgba(70,72,77,0.08)] sm:p-5 lg:grid-cols-2 lg:gap-5">
                     <div>
                         <button className="romd flex items-center justify-center rounded-md bg-[#d5f5dd] p-2 text-xs text-primary-color duration-300 hover:text-blue-hover">
-                            {courseDetails.name}
+                            {categoryID.title}
                         </button>
                         <h2 className="mt-5 font-IRANSans-Medium text-2xl text-[#464749]">
                             {courseDetails.name}
