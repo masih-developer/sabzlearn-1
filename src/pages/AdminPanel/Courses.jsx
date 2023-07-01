@@ -7,12 +7,12 @@ import { toast } from "react-hot-toast";
 import AppInput from "../../components/common/AppInput";
 import useForm from "../../hooks/useForm";
 import {
-    emailValidator,
+    englishLettersValidator,
     maxValidator,
     minValidator,
     requiredValidator,
 } from "../../validators/rules";
-import DropZone from "../../components/common/DropZone";
+import Dropzone from "react-dropzone";
 
 const AdminPanelCourses = () => {
     const [courses, setCourses] = useState([]);
@@ -20,13 +20,15 @@ const AdminPanelCourses = () => {
     const [isOpenModal, setIsOpenModal] = useState(false);
     const [categories, setCategories] = useState([]);
     const [isSelectedMenu, setIsSelectedMenu] = useState(false);
+    const [courseCategory, setCourseCategory] = useState("");
+    const [courseStatus, setCourseStatus] = useState("presell");
+    const [courseCoverFile, setCourseCoverFile] = useState(null);
     const [formState, onInputHandler] = useForm(
         {
-            name: { valu: "", isValid: false },
-            username: { value: "", isValid: false },
-            email: { value: "", isValid: false },
-            password: { value: "", isValid: false },
-            phone: { value: "", isValid: false },
+            name: { value: "", isValid: false },
+            description: { value: "", isValid: false },
+            price: { value: "", isValid: false },
+            shortname: { value: "", isValid: false },
         },
         false
     );
@@ -113,16 +115,53 @@ const AdminPanelCourses = () => {
     };
 
     const submitUserHandler = (e) => {
+        const localStorageData = JSON.parse(localStorage.getItem("user"));
         e.preventDefault();
+
+        let formData = new FormData();
+        formData.append("name", formState.inputs.name.value);
+        formData.append("description", formState.inputs.description.value);
+        formData.append("shortName", formState.inputs.shortname.value);
+        formData.append("price", formState.inputs.price.value);
+        formData.append("categoryID", courseCategory);
+        formData.append("status", courseStatus);
+        formData.append("cover", courseCoverFile);
+
+        const toastID = toast.loading("درحال انجام عملیات...");
+        fetch("http://localhost:4000/v1/courses", {
+            method: "POST",
+            headers: {
+                Authorization: `Bearer ${localStorageData.token}`,
+            },
+            body: formData,
+        })
+            .then((res) => {
+                if (res.ok) {
+                    return res.json();
+                }
+                throw new Error(res);
+            })
+            .then(() => {
+                toast.success("ثبت دوره با موفقیت انجام شد.", { id: toastID });
+                getAllCoursesHandler();
+            })
+            .catch((err) => {
+                console.log(err);
+            });
     };
 
     const selectCategoryHandler = (e) => {
         if (e.target.value === "default") {
             setIsSelectedMenu(false);
+            setCourseCategory("");
         } else {
             setIsSelectedMenu(true);
-            console.log(e.target.value);
+            setCourseCategory(e.target.value);
         }
+    };
+
+    const onChangeRadioHandler = (e) => {
+        setCourseStatus(e.target.value);
     };
 
     return (
@@ -142,11 +181,7 @@ const AdminPanelCourses = () => {
                                     onInputHandler={onInputHandler}
                                     placeholder="لطفا نام محصول را وارد کنید..."
                                     className="rounded-md p-2 placeholder:text-sm"
-                                    validations={[
-                                        requiredValidator(),
-                                        minValidator(8),
-                                        maxValidator(20),
-                                    ]}
+                                    validations={[requiredValidator()]}
                                 />
                             </div>
                             <div className="flex flex-col gap-1">
@@ -159,24 +194,20 @@ const AdminPanelCourses = () => {
                                     onInputHandler={onInputHandler}
                                     placeholder="لطفا قیمت محصول جدید را وارد کنید..."
                                     className="rounded-md p-2 placeholder:text-sm"
-                                    validations={[
-                                        requiredValidator(),
-                                        minValidator(8),
-                                        maxValidator(20),
-                                    ]}
+                                    validations={[requiredValidator(), maxValidator(7)]}
                                 />
                             </div>
                             <div className="flex flex-col gap-1">
-                                <label htmlFor="count" className="font-IRANSans-Bold">
-                                    تعداد محصول
+                                <label htmlFor="shortname" className="font-IRANSans-Bold">
+                                    url محصول
                                 </label>
                                 <AppInput
                                     elem="input"
-                                    id="count"
+                                    id="shortname"
                                     onInputHandler={onInputHandler}
                                     placeholder="لطفا ایمیل کاربر را وارد کنید..."
                                     className="rounded-md p-2 placeholder:text-sm"
-                                    validations={[emailValidator()]}
+                                    validations={[minValidator(5), englishLettersValidator()]}
                                 />
                             </div>
                             <div className="flex flex-col gap-1">
@@ -218,13 +249,90 @@ const AdminPanelCourses = () => {
                                 <label htmlFor="description" className="font-IRANSans-Bold">
                                     عکس محصول
                                 </label>
-                                <DropZone />
+                                <Dropzone
+                                    accept={{
+                                        "image/jpeg": [],
+                                        "image/jpg": [],
+                                        "image/png": [],
+                                    }}
+                                    maxFiles={1}
+                                    onDrop={(acceptedFiles) => setCourseCoverFile(acceptedFiles[0])}
+                                >
+                                    {({
+                                        getRootProps,
+                                        getInputProps,
+                                        acceptedFiles,
+                                        isDragAccept,
+                                        isDragActive,
+                                    }) => (
+                                        <section>
+                                            <div
+                                                {...getRootProps()}
+                                                className={`flex min-h-[120px] w-full flex-col justify-center rounded-md border border-dashed text-center outline-0 ${
+                                                    acceptedFiles.length
+                                                        ? "border-green-500"
+                                                        : "border-red-500"
+                                                }`}
+                                            >
+                                                <input {...getInputProps()} className="outline-0" />
+                                                <p>
+                                                    {!isDragAccept &&
+                                                    !isDragActive &&
+                                                    !acceptedFiles.length
+                                                        ? "عکس محصول مورد نظر را آپلود کنید."
+                                                        : null}
+                                                    {isDragActive && "درحال آپلود عکس..."}
+                                                    {acceptedFiles.length
+                                                        ? "عکس با موفقیت آپلود شد."
+                                                        : null}
+                                                </p>
+                                                {acceptedFiles.length ? (
+                                                    <ul className="mt-2 flex h-full flex-col items-center justify-center gap-2 border-t border-t-gray-200 pt-2">
+                                                        {acceptedFiles.map((file, index) => (
+                                                            <li key={index}>{file.name}</li>
+                                                        ))}
+                                                    </ul>
+                                                ) : null}
+                                            </div>
+                                        </section>
+                                    )}
+                                </Dropzone>
+                            </div>
+                            <div className="flex flex-col gap-1">
+                                <label className="mb-2 font-IRANSans-Bold">وضعیت دوره: </label>
+                                <div className="flex items-center gap-5">
+                                    <div className="flex items-center gap-1">
+                                        <label htmlFor="performing">درحال برگزاری: </label>
+                                        <input
+                                            type="radio"
+                                            id="performing"
+                                            name="course-status"
+                                            value="start"
+                                            className=""
+                                            defaultChecked
+                                            onChange={onChangeRadioHandler}
+                                        />
+                                    </div>
+                                    <div className="flex items-center gap-1">
+                                        <label htmlFor="presell">پیش فروش: </label>
+                                        <input
+                                            type="radio"
+                                            id="presell"
+                                            name="course-status"
+                                            value="presell"
+                                            className=""
+                                            onChange={onChangeRadioHandler}
+                                        />
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <Button
                             type="submit"
                             className="mt-5 flex items-center justify-center rounded-md bg-blue-hover px-5 py-2 text-white disabled:opacity-70"
-                            disabled={!formState.isFormValid}
+                            disabled={
+                                !formState.isFormValid || !isSelectedMenu || !courseCoverFile?.name
+                            }
                         >
                             افزودن
                         </Button>
