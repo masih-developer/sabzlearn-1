@@ -57,6 +57,7 @@ const Sidebar = () => {
                         { id: 5, name: "کاربران", path: "users" },
                         { id: 6, name: "کد های تخفیف", path: "discount-codes" },
                         { id: 7, name: "دسته بندی ها", path: "categories" },
+                        { id: 8, name: "ارتباط با ما", path: "contacts" },
                     ].map((item) => (
                         <MenuItem key={item.id} component={<NavLink to={item.path} />}>
                             {item.name}

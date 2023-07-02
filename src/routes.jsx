@@ -13,6 +13,7 @@ import AdminPanel from "./pages/AdminPanel/index";
 import Users from "./pages/AdminPanel/Users";
 import AdminPanelCourses from "./pages/AdminPanel/Courses";
 import Categories from "./pages/AdminPanel/Categories";
+import Contacts from "./pages/AdminPanel/Contacts";
 
 const routes = [
     { path: "/", element: <Home /> },
@@ -33,6 +34,7 @@ const routes = [
             { path: "users", element: <Users /> },
             { path: "courses", element: <AdminPanelCourses /> },
             { path: "categories", element: <Categories /> },
+            { path: "contacts", element: <Contacts /> },
         ],
     },
 ];
