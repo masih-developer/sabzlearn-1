@@ -168,6 +168,7 @@ const Users = () => {
     return (
         <div className="pb-5">
             <div className="mb-5 rounded-lg p-5 shadow-[0px_0px_20px_2px_rgba(0,0,0,0.1)]">
+                <h3 className="mb-5 font-IRANSans-Bold text-lg">افزودن کاربر جدید</h3>
                 <form action="#" onSubmit={(e) => submitUserHandler(e)}>
                     <div className="grid grid-cols-1 gap-x-10 gap-y-3 sm:grid-cols-2">
                         <div className="flex flex-col gap-1">
