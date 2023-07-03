@@ -1,25 +1,15 @@
-import {
-    FaAngleLeft,
-    FaArrowLeft,
-    FaArrowRight,
-    FaFacebookF,
-    FaRegClock,
-    FaRegEye,
-    FaRegFolder,
-    FaRegStar,
-    FaRegUser,
-    FaStar,
-    FaTelegram,
-    FaTwitter,
-} from "react-icons/fa";
+import { FaAngleLeft, FaRegClock, FaRegEye, FaRegFolder, FaRegUser } from "react-icons/fa";
 import Breadcrumb from "../components/common/Breadcrumb";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import ArticleInfoBox from "../components/ArticleInfoPage/ArticleInfoBox";
 import CommentTextarea from "../components/ArticleInfoPage/CommentTextarea";
 import { useEffect, useState } from "react";
+import { toast } from "react-hot-toast";
+import DOMPurify from "dompurify";
 
 const ArticleInfo = () => {
     const { articleName } = useParams();
+    const navigate = useNavigate();
     const [articleInfo, setArticleInfo] = useState([]);
     const [articleCategory, setArticleCategory] = useState({});
     const [articleCreator, setArticleCreator] = useState({});
@@ -27,12 +17,25 @@ const ArticleInfo = () => {
 
     useEffect(() => {
         fetch(`http://localhost:4000/v1/articles/${articleName}`)
-            .then((res) => res.json())
+            .then(async (res) => {
+                if (res.ok) {
+                    return res.json();
+                }
+                const errorText = await res.text();
+                throw new Error(errorText);
+            })
             .then((articleInfo) => {
                 setArticleInfo(articleInfo);
                 setArticleCategory(articleInfo.categoryID);
                 setArticleCreator(articleInfo.creator);
                 setArticleCreatedAt(articleInfo.createdAt);
+            })
+            .catch((err) => {
+                if (err.message) {
+                    toast.error(JSON.parse(err.message).message);
+                    return navigate("/");
+                }
+                console.log(err);
             });
     }, []);
 
@@ -88,167 +91,13 @@ const ArticleInfo = () => {
                                 alt=""
                                 className="mb-7 block w-full object-cover"
                             />
-                            <div className="flex items-center gap-4">
-                                <div className="flex items-center gap-[1px]">
-                                    <FaStar className="text-[#f9a134]" />
-                                    <FaStar className="text-[#f9a134]" />
-                                    <FaStar className="text-[#f9a134]" />
-                                    <FaStar className="text-[#f9a134]" />
-                                    <FaRegStar className="text-[#f9a134]" />
-                                </div>
-                                <span className="text-[#7d7d7f]">4.2/5 - (5 امتیاز)</span>
-                            </div>
-                            <p className="my-7 text-justify text-md leading-7 text-[#7d7e7f] md:text-right">
-                                جاوا اسکریپت یکی از زبان‌های برنامه‌نویسی اصلی حوزه فرانت‌اند است که
-                                به واسطه فریم ورک‌های آن می‌توان انواع وب سایت‌ها، اپلیکیشن‌ها و وب
-                                اپلیکیشن‌ها را طراحی کرد. به طور کلی بعد از یادگیری html و css
-                                معمولاً باید آموزش جاوا اسکریپت را نیز فرا بگیرید. . چرا که این زبان
-                                تکمیل‌کننده html و css بوده و در چنین شرایطی موقعیت‌های شغلی بیشتر
-                                را در اختیار خواهید داشت و همچنین می‌توانید پروژه‌های گسترده‌تری را
-                                انجام دهید. در حال حاضر با وجود منابع رایگان موجود در وب شما به
-                                راحتی می‌توانید زبان جاوا اسکریپت را به صورت حرفه‌ای فرا بگیرید. به
-                                همین واسطه در ادامه مطلب قصد داریم سایت‌های شاخص آموزش این زبان
-                                برنامه‌نویسی در جهان را به شما معرفی کنیم و در آخر بگوییم که بهترین
-                                سایت آموزش جاوا اسکریپت کدام است.
-                            </p>
-                            <div className="mb-7 rounded-3xl bg-[#f2f2f2] p-7">
-                                <h4 className="mb-3 font-IRANSans-Bold text-md text-[#333333]">
-                                    آنچه در این مقاله خواهید خواند:
-                                </h4>
-                                <ul className="flex flex-col gap-1.5">
-                                    <li>
-                                        <Link
-                                            to="/"
-                                            className="text-md text-blue-hover hover:underline"
-                                        >
-                                            معرفی بهترین سایت ‌های آموزش جاوا اسکریپت:
-                                        </Link>
-                                    </li>
-                                    <li>
-                                        <Link
-                                            to="/"
-                                            className="text-md text-blue-hover hover:underline"
-                                        >
-                                            یک راه آسان‌تر، دوره‌ های جاوا اسکریپت آکادمی سبزلرن!
-                                        </Link>
-                                    </li>
-                                    <li>
-                                        <Link
-                                            to="/"
-                                            className="text-md text-blue-hover hover:underline"
-                                        >
-                                            ثبت نام در دوره‌ های جاوا اسکریپت سبزلرن:
-                                        </Link>
-                                    </li>
-                                </ul>
-                            </div>
-                            <img src="/images/blog/2.jpg" alt="" className="mx-auto mb-7 block" />
-                            <div className="mb-7">
-                                <h2 className="mb-4 font-IRANSans-Medium text-2xl text-[#008c25]">
-                                    معرفی بهترین سایت ‌های آموزش جاوا اسکریپت:
-                                </h2>
-                                <p className="text-justify leading-7 text-[#7d7e7f] md:text-right">
-                                    توجه داشته باشید که تمام وب سایت‌هایی که به عنوان بهترین سایت
-                                    آموزش جاوا اسکریپت در ادامه معرفی می‌کنیم، بین‌المللی هستند و
-                                    منابع موجود در آن‌ها به زبان انگلیسی است. در نتیجه شما باید یا
-                                    تسلط متوسط و حداقلی به زبان انگلیسی داشته باشید و یا اینکه با
-                                    استفاده از گوگل ترنسلیت منابع موجود را ترجمه کرده و از آن‌ها
-                                    استفاده کنید. به همین دلیل در انتهای محتوا به شما خواهیم گفت که
-                                    راه آسان دیگری برای یادگیری زبان جاوا اسکریپت وجود دارد که شما
-                                    بتوانید به واسطه آن به صورت رایگان و به زبان فارسی این زبان را
-                                    یاد بگیرید.
-                                </p>
-                            </div>
-                            <img src="/images/blog/4.png" alt="" className="mx-auto block" />
-                            <div className="mb-16">
-                                <h2 className="mb-4 font-IRANSans-Medium text-2xl text-[#008c25]">
-                                    معرفی بهترین سایت ‌های آموزش جاوا اسکریپت:
-                                </h2>
-                                <p className="text-justify leading-7 text-[#7d7e7f] md:text-right">
-                                    توجه داشته باشید که تمام وب سایت‌هایی که به عنوان بهترین سایت
-                                    آموزش جاوا اسکریپت در ادامه معرفی می‌کنیم، بین‌المللی هستند و
-                                    منابع موجود در آن‌ها به زبان انگلیسی است. در نتیجه شما باید یا
-                                    تسلط متوسط و حداقلی به زبان انگلیسی داشته باشید و یا اینکه با
-                                    استفاده از گوگل ترنسلیت منابع موجود را ترجمه کرده و از آن‌ها
-                                    استفاده کنید. به همین دلیل در انتهای محتوا به شما خواهیم گفت که
-                                    راه آسان دیگری برای یادگیری زبان جاوا اسکریپت وجود دارد که شما
-                                    بتوانید به واسطه آن به صورت رایگان و به زبان فارسی این زبان را
-                                    یاد بگیرید.
-                                </p>
-                            </div>
-                            <div className="mb-7">
-                                <h2 className="mb-4 font-IRANSans-Medium text-2xl text-[#008c25]">
-                                    معرفی بهترین سایت ‌های آموزش جاوا اسکریپت:
-                                </h2>
-                                <p className="text-justify leading-7 text-[#7d7e7f] md:text-right">
-                                    توجه داشته باشید که تمام وب سایت‌هایی که به عنوان بهترین سایت
-                                    آموزش جاوا اسکریپت در ادامه معرفی می‌کنیم، بین‌المللی هستند و
-                                    منابع موجود در آن‌ها به زبان انگلیسی است. در نتیجه شما باید یا
-                                    تسلط متوسط و حداقلی به زبان انگلیسی داشته باشید و یا اینکه با
-                                    استفاده از گوگل ترنسلیت منابع موجود را ترجمه کرده و از آن‌ها
-                                    استفاده کنید. به همین دلیل در انتهای محتوا به شما خواهیم گفت که
-                                    راه آسان دیگری برای یادگیری زبان جاوا اسکریپت وجود دارد که شما
-                                    بتوانید به واسطه آن به صورت رایگان و به زبان فارسی این زبان را
-                                    یاد بگیرید.
-                                </p>
-                            </div>
-                            <img src="/images/blog/3.jpg" alt="" className="mx-auto block" />
-                            <div className="flex items-center gap-3">
-                                <span className="text-[#7d7e7f]">اشتراک گذاری :</span>
-                                <div className="flex items-center gap-2">
-                                    <Link
-                                        to="/"
-                                        className="text-lg text-[#7b868a] duration-300 hover:text-blue-hover"
-                                    >
-                                        <FaTelegram />
-                                    </Link>
-                                    <Link
-                                        to="/"
-                                        className="text-lg text-[#7b868a] duration-300 hover:text-blue-hover"
-                                    >
-                                        <FaTwitter />
-                                    </Link>
-                                    <Link
-                                        to="/"
-                                        className="text-lg text-[#7b868a] duration-300 hover:text-blue-hover"
-                                    >
-                                        <FaFacebookF />
-                                    </Link>
-                                </div>
-                            </div>
                         </div>
-                        <div className="my-10 flex flex-col items-center justify-between gap-5 rounded-lg bg-[#f0f2f7] px-5 py-10 md:flex-row md:gap-10">
-                            <div className="flex items-center gap-5">
-                                <Link
-                                    to="/"
-                                    className="text-[#adb5db] duration-300 hover:text-blue-hover"
-                                >
-                                    <FaArrowRight />
-                                </Link>
-                                <Link
-                                    to="/"
-                                    className="text-center text-md text-dark-color duration-300 hover:text-blue-hover sm:text-base"
-                                >
-                                    سریع ترین و بهترین راه یادگیری جاوا اسکریپت چیست؟ | تجربه برنامه
-                                    نویسان
-                                </Link>
-                            </div>
-                            <div className="flex items-center gap-5">
-                                <Link
-                                    to="/"
-                                    className="text-center text-md text-dark-color duration-300 hover:text-blue-hover sm:text-base"
-                                >
-                                    سریع ترین و بهترین راه یادگیری جاوا اسکریپت چیست؟ | تجربه برنامه
-                                    نویسان
-                                </Link>
-                                <Link
-                                    to="/"
-                                    className="text-[#adb5db] duration-300 hover:text-blue-hover"
-                                >
-                                    <FaArrowLeft />
-                                </Link>
-                            </div>
-                        </div>
+                        <div
+                            className="my-5"
+                            dangerouslySetInnerHTML={{
+                                __html: DOMPurify.sanitize(articleInfo.body),
+                            }}
+                        ></div>
                         <CommentTextarea />
                     </div>
                     <div className="col-span-12 lg:col-span-4">

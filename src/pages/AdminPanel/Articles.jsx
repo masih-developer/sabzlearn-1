@@ -7,6 +7,7 @@ import AppInput from "../../components/common/AppInput";
 import { englishLettersValidator, minValidator, requiredValidator } from "../../validators/rules";
 import Dropzone from "react-dropzone";
 import useForm from "../../hooks/useForm";
+import Editor from "../../components/AdminPanel/Editor";
 
 const Articles = () => {
     const [articles, setArticles] = useState([]);
@@ -14,11 +15,11 @@ const Articles = () => {
     const [isSelectedMenu, setIsSelectedMenu] = useState(false);
     const [articleCategory, setArticleCategory] = useState("");
     const [articleCoverFile, setArticleCoverFile] = useState({});
+    const [articleBody, setArticleBody] = useState("");
 
     const [formState, onInputHandler] = useForm(
         {
-            name: { value: "", isValid: false },
-            body: { value: "", isValid: false },
+            title: { value: "", isValid: false },
             description: { value: "", isValid: false },
             shortname: { value: "", isValid: false },
         },
@@ -99,8 +100,7 @@ const Articles = () => {
                     const errorText = await res.text();
                     throw new Error(errorText);
                 })
-                .then((result) => {
-                    console.log(result);
+                .then(() => {
                     toast.success("مقاله مد نظر با موفقیت حذف شد.", { id: toastID });
                     getAllArticlesHandler();
                 })
@@ -126,13 +126,18 @@ const Articles = () => {
 
     const submitUserHandler = (e) => {
         e.preventDefault();
-        if (formState.isFormValid && isSelectedMenu && articleCoverFile?.name) {
+        if (
+            formState.isFormValid &&
+            isSelectedMenu &&
+            articleCoverFile?.name &&
+            articleBody.trim()
+        ) {
             const localStorageData = JSON.parse(localStorage.getItem("user"));
             let formData = new FormData();
-            formData.append("name", formState.inputs.name.value);
-            formData.append("body", formState.inputs.body.value);
+            formData.append("title", formState.inputs.title.value);
+            formData.append("body", articleBody);
             formData.append("description", formState.inputs.description.value);
-            formData.append("shortname", formState.inputs.shortname.value);
+            formData.append("shortName", formState.inputs.shortname.value);
             formData.append("cover", articleCoverFile);
             formData.append("categoryID", articleCategory);
 
@@ -151,8 +156,7 @@ const Articles = () => {
                     const errorText = await res.text();
                     throw new Error(errorText);
                 })
-                .then((result) => {
-                    console.log(result);
+                .then(() => {
                     toast.success("مقاله با موفقیت ساخته شد.", { id: toastID });
                     getAllArticlesHandler();
                 })
@@ -173,12 +177,12 @@ const Articles = () => {
                 <form action="#" onSubmit={submitUserHandler}>
                     <div className="grid grid-cols-1 gap-x-10 gap-y-3 sm:grid-cols-2">
                         <div className="flex flex-col gap-1">
-                            <label htmlFor="name" className="font-IRANSans-Bold">
+                            <label htmlFor="title" className="font-IRANSans-Bold">
                                 نام مقاله
                             </label>
                             <AppInput
                                 elem="input"
-                                id="name"
+                                id="title"
                                 onInputHandler={onInputHandler}
                                 placeholder="لطفا نام مقاله را وارد کنید..."
                                 className="rounded-md p-2 placeholder:text-sm"
@@ -199,30 +203,23 @@ const Articles = () => {
                             />
                         </div>
                         <div className="col-span-2 flex flex-col gap-1">
-                            <label htmlFor="body" className="font-IRANSans-Bold">
+                            <label htmlFor="description" className="font-IRANSans-Bold">
                                 چکیده
                             </label>
                             <AppInput
                                 elem="textarea"
-                                id="body"
+                                id="description"
                                 onInputHandler={onInputHandler}
                                 placeholder="بدنه مقاله را بنویسید..."
                                 className="h-[150px] min-h-[41.6px] rounded-md p-2 placeholder:text-sm"
                                 validations={[requiredValidator()]}
                             />
                         </div>
-                        <div className="flex flex-col gap-1">
-                            <label htmlFor="description" className="font-IRANSans-Bold">
-                                توضیحات مقاله
+                        <div className="col-span-2 flex flex-col gap-1">
+                            <label htmlFor="body" className="font-IRANSans-Bold">
+                                محتوای مقاله
                             </label>
-                            <AppInput
-                                elem="textarea"
-                                id="description"
-                                onInputHandler={onInputHandler}
-                                placeholder="متن را بنویسید..."
-                                className="h-[120px] min-h-[41.6px] rounded-md p-2 placeholder:text-sm"
-                                validations={[requiredValidator()]}
-                            />
+                            <Editor value={articleBody} setValue={setArticleBody} />
                         </div>
                         <div className="flex flex-col gap-1">
                             <label htmlFor="description" className="font-IRANSans-Bold">
@@ -300,7 +297,10 @@ const Articles = () => {
                         type="submit"
                         className="mt-5 flex items-center justify-center rounded-md bg-blue-hover px-5 py-2 text-white disabled:opacity-70"
                         disabled={
-                            !formState.isFormValid || !isSelectedMenu || !articleCoverFile?.name
+                            !formState.isFormValid ||
+                            !isSelectedMenu ||
+                            !articleCoverFile?.name ||
+                            !articleBody.trim()
                         }
                     >
                         افزودن

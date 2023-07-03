@@ -8,16 +8,16 @@ const ArticleBox = ({ shortName, cover, title, description, hoverEffect }) => {
                 hoverEffect ? "duration-300 hover:-translate-y-2" : null
             }`}
         >
-            <Link to={`/article-info/${shortName}`} className="block w-full">
+            <Link to={`/article-info/${shortName}`} className="block max-h-[250px] w-full">
                 <img
                     src={`http://localhost:4000/courses/covers/${cover}`}
                     alt=""
-                    className="w-full"
+                    className="h-full w-full object-contain"
                 />
             </Link>
             <div className="px-5 py-6">
                 <Link to={`/article-info/${shortName}`}>
-                    <h3 className="font-IRANSans-Bold text-dark-color duration-300 hover:text-blue-hover">
+                    <h3 className="truncate font-IRANSans-Bold text-dark-color duration-300 hover:text-blue-hover">
                         {title}
                     </h3>
                 </Link>
