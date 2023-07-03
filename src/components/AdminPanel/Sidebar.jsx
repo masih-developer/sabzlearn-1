@@ -52,12 +52,13 @@ const Sidebar = () => {
                     {[
                         { id: 1, name: "صفحه اصلی", path: "/p-admin/" },
                         { id: 2, name: "دوره ها", path: "courses" },
-                        { id: 3, name: "منو ها", path: "menus" },
-                        { id: 4, name: "مقاله ها", path: "articles" },
-                        { id: 5, name: "کاربران", path: "users" },
-                        { id: 6, name: "کد های تخفیف", path: "discount-codes" },
-                        { id: 7, name: "دسته بندی ها", path: "categories" },
-                        { id: 8, name: "ارتباط با ما", path: "contacts" },
+                        { id: 3, name: "جلسات", path: "sessions" },
+                        { id: 4, name: "منو ها", path: "menus" },
+                        { id: 5, name: "مقاله ها", path: "articles" },
+                        { id: 6, name: "کاربران", path: "users" },
+                        { id: 7, name: "کد های تخفیف", path: "discount-codes" },
+                        { id: 8, name: "دسته بندی ها", path: "categories" },
+                        { id: 9, name: "ارتباط با ما", path: "contacts" },
                     ].map((item) => (
                         <MenuItem key={item.id} component={<NavLink to={item.path} />}>
                             {item.name}
