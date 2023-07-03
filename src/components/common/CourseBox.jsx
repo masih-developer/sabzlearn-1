@@ -8,7 +8,7 @@ const CourseBox = ({ img, title, teacher, studentCount, price, hoverEffect, path
     return (
         <div
             className={`flex select-none flex-col overflow-hidden rounded-lg bg-white shadow-[0_0_19px_rgba(168,172,185,0.3)] ${
-                hoverEffect ? "duration-300 hover:-translate-y-2" : ""
+                hoverEffect ? "duration-300 hover:-translate-y-2" : null
             }`}
         >
             <Link to={`/course-info/${path}`} className={`block w-full`}>
@@ -26,7 +26,9 @@ const CourseBox = ({ img, title, teacher, studentCount, price, hoverEffect, path
             )}
             <div className="px-2 py-3">
                 <Button to={`/course-info/${path}`}>
-                    <h4 className="text-dark-color duration-300 hover:text-blue-hover">{title}</h4>
+                    <h4 className="truncate text-dark-color duration-300 hover:text-blue-hover">
+                        {title}
+                    </h4>
                 </Button>
                 <div className="mt-3 flex items-center justify-between">
                     <div className="flex items-center justify-center gap-1 text-[#6c757d]">

@@ -1,9 +1,13 @@
 import { Link } from "react-router-dom";
 import Button from "./Button";
 
-const ArticleBox = ({ shortName, cover, title, description }) => {
+const ArticleBox = ({ shortName, cover, title, description, hoverEffect }) => {
     return (
-        <div className="flex h-full select-none flex-col justify-between overflow-hidden rounded-lg shadow-[0_5px_30px_rgba(70,72,77,0.08)] duration-300 hover:-translate-y-2">
+        <div
+            className={`flex h-full select-none flex-col justify-between overflow-hidden rounded-lg shadow-[0_5px_30px_rgba(70,72,77,0.08)] ${
+                hoverEffect ? "duration-300 hover:-translate-y-2" : null
+            }`}
+        >
             <Link to={`/article-info/${shortName}`} className="block w-full">
                 <img
                     src={`http://localhost:4000/courses/covers/${cover}`}
